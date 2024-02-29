@@ -1,0 +1,201 @@
+# Large Sample Theory {#sec-modeling-large-sample-theory}
+
+{{< include _setupcode.qmd >}}
+
+The classical regression model (@def-classical-regression) imposes several conditions on the distribution of the error term.  These conditions are needed to depend on the model for the sampling distribution of the parameter estimates we developed in that section (@def-ls-sampling-distribution).  However, these conditions are not always reasonable.  Fortunately, many of the conditions can be relaxed.  In this section, we consider relaxing the "Normality" condition.  Changing the conditions we impose impacts how we model the sampling distribution of our estimates (and therefore impacts confidence intervals and p-values).
+
+
+
+## Two Types of Models
+Models for the data generating process are broadly characterized into one of three groups: parametric, semiparametric, and nonparametric.
+
+:::{#def-parametric-model}
+## Parametric Model
+A parametric model characterizes the distribution of the response using a finite set of parameters; for our purposes, this generally means the model _fully_ characterize the distribution of the response given the predictors.
+:::
+
+:::{#def-nonparametric-model}
+## Nonparametric Model
+A nonparametric model is unable to characterize the response using a finite set of parameters; for our purposes, this generally means the model makes no assumptions about the structure of the underlying distribution of the response given the predictors.  Only minimal assumptions (such as independence between observations) are imposed.
+:::
+
+:::{#def-semiparametric-model}
+## Semiparametric Model
+A semiparametric model specifies some components of the underlying distribution of the response using a finite set of parameters but does not fully characterize the distribution.  This generally means that we may specify the mean and/or variance of the response given the predictors, but we do not characterize the distributional family of the response.
+:::
+
+:::{.callout-note}
+Technically, semiparametric models are a subset nonparametric models.  However, semiparametric models are often considered a distinct type of model because they have elements of both parametric models (there are some parameters to be estimated) and nonparametric models (completely data-driven).
+:::
+
+Parametric models make strong assumptions, but often make the analysis straight-forward as we are able to make use of a large class of results from statistical theory.  This is very useful when we have a small sample size in particular.  Nonparametric models are extremely flexible, but they require substantially large sample sizes.  Semiparametric models, in turn, often find a the "sweet spot."  They require larger samples than a parametric model, but not as large as a nonparametric model.  Further, the scientific question of interest is still represented through statements about parameters in the model, linking the interpretations more directly with practical application and making the models more interpretable.
+
+The alternate characterization of the classical regression model (@def-alternate-characterization) reveals that the classical regression model is a parametric model.  It completely characterizes the distribution of the response:
+
+$$(\text{Response})_i \mid (\text{Predictors 1 through } p)_i \dist{Ind} N\left(\beta_0 + \sum\limits_{j=1}^{p} \beta_j (\text{Predictor } j)_i, \sigma^2\right).$$
+
+Consider the aspects being _structure_ specified here:
+
+  1. The mean response is given as a linear combination of the $p$ predictors.
+  2. The variance of the response is constant for all combinations of the predictors.
+  3. Given the predictors, the response follows a Normal distribution.
+
+Each of the aspects of this structure can be very useful when working with statistical theory; however, the questions often posed by researchers do not concern the form of the distribution of the response but only some aspect of the distribution.  For example, the hypotheses we have considered thus far in the text surround the parameters of the mean model; that is, we have concerned ourselves only with questions regarding the _mean_ response.  That is, whether we model the distribution of the response using a Normal distribution or some other is not of interest; scientifically, we are interested in the mean response.  If we are willing to relax the distributional form of the response, we are led to positing a semiparametric model.
+
+:::{#def-semiparametric-linear-model}
+## Semiparametric Linear Model
+Suppose we no longer require that the error terms follow a Normal distribution; however, we do continue to impose the remaining conditions of the classical regression model.  Then, our model could be written as
+
+$$
+\begin{aligned}
+  E\left[(\text{Response})_i \mid (\text{Predictors 1 through } p)_i\right]
+    &= \beta_0 + \sum\limits_{j=1}^{p} \beta_j (\text{Predictor } j)_i \\
+  Var\left[(\text{Response})_i \mid (\text{Predictors 1 through } p)_i\right]
+    &= \sigma^2
+\end{aligned}
+$$
+
+where the responses are independent of one another given the predictors.
+:::
+
+Notice that this version of the model only specifies some aspects of the response distribution; it specifies that the mean is a linear combination of the predictors, and it specifies that the variance is constant.  However, it does not specify the functional form of the distribution.  
+
+
+## Large Sample Results
+The primary benefit of a parametric model is that often the distributional assumption trickles through the analysis and allows us to exactly specify the model for the sampling distribution of the parameter estimates (@def-ls-sampling-distribution, for example).  When we move to a semiparametric model, we need additional tools to allow us to model the sampling distribution of our estimates.  Large sample theory is one such tool.
+
+:::{#def-large-sample-theory}
+## Large Sample Theory
+The phrase "large sample theory" (or "asymptotics") is used to describe a scenario when the model for the sampling distribution (or null distribution) of an estimate (or standardized statistic) can be approximated as the sample size becomes infinitely large.  That is, as the sample size approaches infinity, the sampling distribution (or null distribution) can be easily modeled using a known probability distribution.
+:::
+
+Perhaps the most well-known example of large sample theory is the Central Limit Theorem encountered in introductory statistics.  
+
+:::{#def-clt}
+## Central Limit Theorem
+Let $Y_1, Y_2, \dotsc, Y_n$ be independent and identically distributed random variables with finite mean $\mu$ and variance $\sigma^2$.  Then, as $n$ approaches infinity, the distribution of the ratio
+
+$$\frac{\sqrt{n}\left(\bar{Y} - \mu\right)}{\sigma}$$
+
+approaches that of a Standard Normal random variable.
+:::
+
+Rephrasing in the language of this text, @def-clt states that as the sample size gets large, the standardized distance between the average response observed and the true average response can be modeled using a Normal distribution with mean 0 and variance 1.  Notice that the theorem does not specify the distribution of the response $Y$; it only specifies the mean and variance.  That is, we began with a semiparametric model for the data generating process (the distribution of the response is only partially specified) and yet obtained a model for the sampling distribution or our statistic of interest.  We exchanged the condition that the response follow a Normal distribution (a more classical approach) for the condition that "the sample size be sufficiently large" (the large sample theory approach); under thess revised conditions, we have a model for the sampling distribution of our parameter estimate.
+
+It turns out that similar results can be derived for the semiparametric linear model.  That is, in large samples, we can approximate the sampling distribution of our estimates and the null distribution of our standardized statistics.
+
+:::{#def-ls-sampling-distribution-large-samples}
+## Large Sample Model for the Sampling Distribution of the Least Squares Estimates
+Suppose the classical regression conditions hold, with the exception of the errors following a Normal distribution.  As the sample size gets large, we have that the distribution of the ratio
+
+$$\frac{\widehat{\beta}_j - \beta_j}{\sqrt{Var\left(\widehat{\beta}_j\right)}} \sim N(0, 1)$$
+
+for all $j = 0, 1, \dotsc, p$.  Further, under the null hypothesis
+
+$$H_0: \bm{K}\bs{\beta} = \bm{m}$$
+
+we have
+
+$$\left(\bm{K}\widehat{\bs{\beta}} - \bm{m}\right)^\top \left(\bm{K}\widehat{\bs{\Sigma}}\bm{K}^\top\right)^{-1} \left(\bm{K}\widehat{\bs{\beta}} - \bm{m}\right) \sim \chi^2_r.$$
+:::
+
+Notice that our statistics and standardized statistic have a similar form as before; the difference is the probability model being used.  In place of a t-distribution, we have a Normal distribution.  In place of the F-distribution, we have a Chi-Square distribution.  These large sample results allow us to perform inference even if we are unwilling to assume the errors follow a Normal distribution.
+
+It is natural to ask how large of a sample size is required for these models to be reasonable; there is no simple answer.  Empirical studies suggest that in practice, if we have at least 30 degrees of freedom for estimating the error term, these results are often reasonable.  However, empirical studies also demonstrate that it does depend on the tail behavior of the underlying population distribution; there are some populations that begin to mimic these results at samples of size 10 and others that require samples of size 10000.  In practice, this is an _assumption_ the analyst must determine whether to adopt.
+
+:::{.callout-note
+Not all software implements methods for relying on these large sample results.  However, as the sample size gets large, it turns out that classical inference and the large sample results coincide.  That is, the confidence intervals and p-values we would compute using the large sample models and those obtained assuming the classical regression model are nearly identical.  Therefore, in practice, when the sample size is large, we can rely on the default output even if we are unwilling to assume the errors follow a Normal distribution.
+:::
+
+
+## Residual Bootstrap
+An alternative to large sample theory is building an empirical model for the sampling distribution (or null distribution) when working with a semiparametric model; one process for this is known as bootstrapping.
+
+:::{#def-bootstrapping}
+## Bootstrapping
+A process of constructing a sampling distribution of the parameter estimates through resampling.  The observed data is resampled repeatedly, and the parameters of interest are estimated in each resample.  The distribution of these estimates across the resamples is then used as an empirical model of the corresponding sampling distributions.
+:::
+
+There are several bootstrapping algorithms; the most foundational for regression modeling is the residual bootstrap.
+
+:::{#def-residual-bootstrap}
+## Residual Bootstrap
+Suppose we observe a sample of size $n$ and use the data to compute the least squares estimates $\widehat{\bs{\beta}}$ for the parameters in the model
+
+$$(\text{Response})_i = \beta_0 + \sum_{j=1}^{p} \beta_j (\text{Predictor } j)_i + \varepsilon_i.$$
+
+The residual bootstrap proceeds according to the following algorithm:
+
+  1. Compute the residuals 
+  
+  $$(\text{Residuals})_i = (\text{Response})_i - (\text{Predicted Response})_i$$
+  
+  2. Take a random sample of size $n$ (with replacement) of the residuals; call these values $e_1^*, \dotsc, e_n^*$.
+  3. Form "new" responses $y_1^*, \dotsc, y_n^*$ according to
+  
+  $$y_i^* = \widehat{\beta}_0 + \sum_{j=1}^{p} \widehat{\beta}_j (\text{Predictor } j)_i + e_i^*.$$
+  
+  4. Obtain the least squares estimates $\widehat{\bs{\alpha}}$ by finding the values of $\bs{\alpha}$ that minimize 
+  
+  $$\sum_{i=1}^{n} \left(y_i^* - \alpha_0 - \sum_{j=1}^{p} \alpha_j (\text{Predictor } j)_i\right)^2.$$
+  
+  5. Repeat steps 2-4 $m$ times.
+
+We often take $m$ to be large (at least 1000).  After each pass through the algorithm, we retain the least squares estimates $\widehat{\bs{\alpha}}$ from the resample.  The distribution of these estimates across the resamples is a good empirical model for the sampling distribution of the original least squares estimates.
+:::
+
+While the residual bootstrap is the foundation of many similar algorithms, it is perhaps not as easy to understand as the case-resampling bootstrap.
+
+:::{#def-case-resampling-bootstrap}
+## Case Resampling Bootstrap
+Suppose we observe a sample of size $n$ and use the data to compute the least squares estimates $\widehat{\bs{\beta}}$ for the parameters in the model
+
+$$(\text{Response})_i = \beta_0 + \sum_{j=1}^{p} \beta_j (\text{Predictor } j)_i + \varepsilon_i.$$
+
+The case resampling bootstrap proceeds according to the following algorithm:
+
+  1. Take a random sample of size $n$ (with replacement) of the raw data (keeping all variables from the same observation together); denote the $i$-th selected response and predictors $(\text{Response})_i^*$ and $(\text{Predictor } j)_i^*$, respectively.
+  2. Obtain the least squares estimates $\widehat{\bs{\alpha}}$ by finding the values of $\bs{\alpha}$ that minimize 
+  
+  $$\sum_{i=1}^{n} \left((\text{Response})_i^* - \alpha_0 - \sum_{j=1}^{p} \alpha_j (\text{Predictor } j)_i^*\right)^2.$$
+  
+  3. Repeat steps 1-2 $m$ times.
+
+We often take $m$ to be large (at least 1000).  After each pass through the algorithm, we retain the least squares estimates $\widehat{\bs{\alpha}}$ from the resample.  The distribution of these estimates across the resamples is a good empirical model for the sampling distribution of the original least squares estimates.
+:::
+
+The case-resampling bootstrap procedure is easier to visualize as we are resampling the data observed.  The resampling in the residual bootstrap is a bit more indirect as the residuals are what is resampled; this mimics generating new observations by "jittering" points away from the estimated regression line.  In both algorithms, the same model is refit on each resample producing new estimates.  The collection/distribution of these estimates across the $m$ resamples is our model for the sampling distribution (which could be visualized using a histogram, for example).
+
+The theoretical underpinnings of bootstrapping (and how it is implemented efficiently in software) is beyond the scope of this text.  What we emphasize is that through this process, we construct a model for the sampling distribution of the estimates, and that allows us to compute confidence intervals.  Further, the residual bootstrap requires the same conditions as the classical regression model, with the exception of requiring the errors to follow a Normal distribution.  That is, it has the same conditions as we stated for our semiparametric regression model above.
+
+:::{.callout-note}
+Technically, the case-resampling bootstrap and the residual bootstrap require different conditions, with the case-resampling bootstrap being less restrictive.  However, at this point, we do not make a distinction between which bootstrap algorithm is utilized.  We will discuss the benefits of case-resampling later in the text.
+:::
+
+Bootstrapping is more computationally burdensome than large sample theory, but it does not rely on the sample size being "large enough."
+
+:::{.callout-note}
+While theoretically bootstrapping can be used with any sample size, it has been shown to yield more reliable results in large samples.
+:::
+
+:::{.callout-note}
+While we have focused on the use of bootstrapping for computing a confidence interval, the same procedures can be adapted to compute p-values for hypothesis tests as well.
+:::
+
+
+## Choosing a Path
+We have discussed two alternatives to using inference results from the classical regression model when we are unwilling to assume the errors follow a Normal distribution.  Further, we have discussed ways to determine if the data is consistent with the assumption that the errors have a Normal distribution (@sec-glm-assessing-conditions).  As we have seen throughout this unit, while these approaches were discussed in the context of the linear model, they illustrate a concept that holds across many types of regression models --- there are essentially three ways to build a model for the sampling distribution of our parameter estimates.
+
+:::{.callout-tip}
+## Big Idea
+There are three options for modeling the sampling (null) distribution of a parameter estimate (standardized statistic):
+
+  1. Exact Probability Theory: often the result of assuming a parametric model, the sampling distribution of the resulting parameter estimates is derived explicitly using probability theory.
+  2. Large Sample Theory: often employed in semiparametric models, the sampling distribution of the resulting parameter estimates can be approximated as the sample size gets large.
+  3. Empirical: often employed in semiparametric models, the sampling distribution of the resulting parameter estimates is modeled through resampling.
+:::
+
+We will see as we move throughout the text that we often move between these various approaches.  However, which approach we take is governed by the conditions we are willing to impose on the data generating process.
+
+We end with a common question: if we are able to model the sampling distribution without fewer conditions, why would we not always take that approach?  The closer the conditions are to the true data generating process, the more powerful our analysis; that is, if the errors are truly Normally distributed, then imposing that condition will make it more likely for us to find a signal that really exists.  So, we battle the tension of a more powerful analysis with one that is more flexible.  We adhere to the belief that we should choose the approach that is most consistent with the available data.
+

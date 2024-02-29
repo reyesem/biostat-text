@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Statistical Modeling for the Biological Sciences - 12&nbsp; Modeling Curvature (Splines)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./04a-rm.html" rel="next">
+<link href="./03f-modeling-large-sample-theory.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="mystyles.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03a-modeling.html">Unit III: General Modeling Techniques</a></li><li class="breadcrumb-item"><a href="./03g-modeling-splines.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Modeling Curvature (Splines)</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Biostatistics</a> 
+        <div class="sidebar-tools-main">
+    <a href="./ma482-text.pdf" rel="" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./01a-review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit I: Review of Statistics and Probability</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01b-statistical-process.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Overview of the Statistical Process</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01c-distributional-quartet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Distributional Quartet</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01d-essential-probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Essential Probability</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./02a-glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit II: General Linear Model</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02b-glm-model-framework.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">General Linear Model Framework</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02c-glm-assessing-conditions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Assessing the Conditions for the General Linear Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02d-glm-unifying-framework.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">The General Linear Model as a Unifying Framework</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./03a-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit III: General Modeling Techniques</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03b-modeling-related-predictors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Addressing Relationships Between Predictors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03c-modeling-categorical-predictors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Incorporating Categorical Predictors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03d-modeling-interactions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Allowing Effect Modification (Interaction Terms)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03e-modeling-linear-hypotheses.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">General Linear Hypothesis Test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03f-modeling-large-sample-theory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Large Sample Theory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03g-modeling-splines.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Modeling Curvature (Splines)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./04a-rm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit IV: Models for Repeated Measures</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04b-rm-terminology.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Language of Repeated Measures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04c-rm-mixed-models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mixed Effects Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04d-rm-gee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Generalized Estimating Equations</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app-glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-modeling-splines" class="quarto-section-identifier"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Modeling Curvature (Splines)</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>In addition to conditions on the error term, the classical regression model (<a href="02b-glm-model-framework.html#def-classical-regression">Definition&nbsp;<span>4.3</span></a>) requires that the predictors enter the model linearly. It is often the case, however, that the relationship between the response and a predictor is not linear, even after accounting for other predictors. Ignoring this curvature, essentially leaving the deterministic portion of the model incorrectly specified, can result in incorrect conclusions. Fortunately, the linear model framework is flexible enough to model curvature. The apparent contradiction that a “linear” model can address curvature comes from a misunderstanding of what it means to be a “linear” model.</p>
+<div id="def-linear-model" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 12.1 (Linear Model) </strong></span>A model is said to be linear if it can be expressed as a linear combination of the <em>parameters</em>. That is, the linearity does not refer to the form of the predictors but the form of the parameters.</p>
+</div>
+<p>The beauty of this understanding of linearity is that it allows us to capture curvature, provided that we can represent that curvature through the addition of additional predictors. As a simple example, suppose we have a response that has a parabolic relationship with a predictor (<a href="#fig-modeling-splines-parabola">Figure&nbsp;<span>12.1</span></a>).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-modeling-splines-parabola" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="./images/fig-modeling-splines-parabola-1.png" class="img-fluid figure-img" style="width:80.0%" alt="Scatterplot with parabolic best-fit line overlaid."></p>
+<figcaption class="figure-caption">Figure&nbsp;12.1: Illustration of a parabolic relationship between a response and a predictor.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Such a relationship could be captured by the <em>linear</em> model</p>
+<p><span class="math display">\[(\text{Response})_i = \beta_0 + \beta_1 (\text{Predictor})_i^2 + \varepsilon_i.\]</span></p>
+<p>The mean response will clearly generate curvature, but the deterministic portion is linear in the parameters; let <span class="math inline">\(\mathbf{x}_i\)</span> represent the vector of all predictors for the <span class="math inline">\(i\)</span>-th observation, including the intercept. In this case we have</p>
+<p><span class="math display">\[\mathbf{x}_i = \begin{pmatrix} 1 \\ (\text{Predictor})_i \end{pmatrix}.\]</span></p>
+<p>And, let <span class="math inline">\(\boldsymbol{\beta}\)</span> represent the parameter vector</p>
+<p><span class="math display">\[\boldsymbol{\beta} = \begin{pmatrix} \beta_0 \\ \beta_1 \end{pmatrix}.\]</span></p>
+<p>Then, we can write the above model as</p>
+<p><span class="math display">\[(\text{Response})_i = \mathbf{x}_i^\top \boldsymbol{\beta} + \varepsilon_i\]</span></p>
+<p>where we have that the deterministic portion is the product of two vectors; being able to express the model in this form satisfies the definition of a linear model.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For those not as comfortable with matrix algebra, essentially, the model will be linear in the parameters as long as we can express it in the form</p>
+<p><span class="math display">\[(\text{Response})_i = \beta_0 + \sum_{j=1}^{p} \beta_j (\text{Something not involving parameters})_i + \varepsilon_i\]</span></p>
+<p>even if the “something not involving parameters” consists of nonlinear transformations of variables in our data set.</p>
+</div>
+</div>
+<p>We are interested in investigating transformations of the predictors to add to the model that would capture curvature. In the above example, we knew the form of the curvature we wanted to model (a parabola shifted up from the origin). In practice, we often will not know the form of the curvature, just that it exists (from the plots of the residuals against the predictor). And, that curvature may not be modeled well with a high-degree polynomial (or would require a polynomial of such a high degree it would not be practical). In such cases, splines are very useful.</p>
+<div id="def-spline" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 12.2 (Spline) </strong></span>A spline is a continuous piecewise polynomial used to model curvature. The points that define the piecewise components are called <em>knot points</em>; the functional form is allowed to change at the knot points.</p>
+</div>
+<div id="def-linear-spline" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 12.3 (Linear Spline) </strong></span>A linear spline is a continuous piecewise linear function.</p>
+</div>
+<p>A linear spline is perfect for capturing relationships which appear to be linear over regions, but for which the relationship is different in each of those regions. For example, a “V” relationship would suggest that as the predictor increases, the response tends to decrease up to a point (the bottom of the V); past that point (which is the “knot point” here), as the predictor increases, the response tends to increase as well. A linear spline can be placed into the linear model framework.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Formula for Linear Spline
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A response can be related to a predictor using a linear spline with <span class="math inline">\(k\)</span> knot points, call them <span class="math inline">\(t_1, t_2, \dotsc, t_k\)</span> using the following formula:</p>
+<p><span id="eq-modeling-linear-spline"><span class="math display">\[(\text{Response})_i = \beta_0 + \beta_1 (\text{Predictor})_i + \sum_{j=1}^{k} \beta_{j+1} \left((\text{Predictor})_i - t_j\right)_{+} + \varepsilon_i \tag{12.1}\]</span></span></p>
+<p>where <span class="math inline">\(u_{+}\)</span> takes the value <span class="math inline">\(u\)</span> when <span class="math inline">\(u &gt; 0\)</span> and takes the value 0 otherwise. Capturing curvature using a linear spline with <span class="math inline">\(k\)</span> knot points requires <span class="math inline">\(k\)</span> additional terms.</p>
+</div>
+</div>
+<p><a href="#fig-modeling-splines-linear-spline">Figure&nbsp;<span>12.2</span></a> illustrates a linear spline with two knot points.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-modeling-splines-linear-spline" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="./images/fig-modeling-splines-linear-spline-1.png" class="img-fluid figure-img" style="width:80.0%" alt="Line plot that changes direction two times."></p>
+<figcaption class="figure-caption">Figure&nbsp;12.2: Illustration of a linear spline with two know points.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In practice, the knot points for a linear spline are generally determined by the discipline expert based on some scientific reason why the relationship might change at that particular value of the predictor.</p>
+</div>
+</div>
+<p>While the above definition of the linear spline considers only a single predictor, we can add a spline to a model which has additional predictors. That is, we could consider a model like</p>
+<p><span class="math display">\[(\text{Response})_i = \beta_0 + \beta_1 (\text{Predictor 1})_i + \beta_2 \left((\text{Predictor 1})_i - t_1\right)_+ + \beta_3(\text{Predictor } 2)_i + \varepsilon_i.\]</span></p>
+<p>Here, we have placed a linear spline with a single knot point on the first predictor, but the second predictor enters the model linearly.</p>
+<p>Once we have the additional elements in the model to capture the curvature, we can actually perform a hypothesis test to determine if the additional complexity is needed. Consider <a href="#eq-modeling-linear-spline">Equation&nbsp;<span>12.1</span></a>, the hypothesis</p>
+<p><span class="math display">\[H_0: \beta_2 = \beta_3 = \dotsc = \beta_{k+1} = 0\]</span></p>
+<p>imposes the constraint that each of the spline components be removed from the model. That is, under this hypothesis, a linear relationship is sufficient for modeling the relationship between the response and the predictor.</p>
+<p>There are plenty of forms of curvature which would not be captured by a linear spline. When we have a more complex relationship that needs to be modeled, we use a restricted cubic spline.</p>
+<div id="def-restricted-cubic-spline" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 12.4 (Restricted Cubic Spline) </strong></span>A restricted cubic spline is a continuous function comprised of piecewise cubic polynomials for which the tails of the spline have been restricted to be linear.</p>
+</div>
+<p>Restricted cubic splines (related to natural splines in the computational science community) are smooth at the knot points (meaning they have nice mathematical properties). Further, it has been shown empirically that restricted cubic splines are often flexible enough to approximate nearly any nonlinear relationship. As flexible as they are, what is really amazing is that we can embed restricted cubic splines into the linear model framework.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Formula for Resctricted Cubic Spline
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A response can be related to a predictor using a restricted cubic spline with <span class="math inline">\(k\)</span> knot points, call them <span class="math inline">\(t_1, t_2, \dotsc, t_k\)</span> using the following formula:</p>
+<p><span class="math display">\[(\text{Response})_i = \beta_0 + \beta_1 (\text{Predictor})_i + \sum_{j=1}^{k-2} \beta_{j+1} x_{j,i} + \varepsilon_i\]</span></p>
+<p>where</p>
+<p><span id="eq-modeling-rcs"><span class="math display">\[
+\begin{aligned}
+  x_{j,i} &amp;= \left((\text{Predictor})_i - t_j\right)^3_{+} - \frac{\left((\text{Predictor})_i - t_{k-1}\right)^3_{+} \left(t_k - t_j\right)}{t_k - t_{k-1}} \\
+    &amp;\qquad +\frac{\left((\text{Predictor})_i - t_k\right)^3_{+} \left(t_{k-1} - t_j\right)}{t_k - t_{k-1}}
+\end{aligned}
+\tag{12.2}\]</span></span></p>
+<p>and <span class="math inline">\(u_{+}\)</span> is a function taking the value <span class="math inline">\(u\)</span> when <span class="math inline">\(u &gt; 0\)</span> and the value 0 otherwise. Capturing curvature using a restricted cubic spline with <span class="math inline">\(k\)</span> knot points requires <span class="math inline">\(k-2\)</span> additional terms.</p>
+<p>Empirical studies have shown that generally only <span class="math inline">\(k = 5\)</span> knot points are needed, and these are set at the 5-th, 27.5-th, 50-th, 72.5-th, and 95-th percentiles. This ensures there is enough data in each region to appropriately capture the curvature.</p>
+</div>
+</div>
+<p>Similar to linear splines, we can add a restricted cubic spline for a variable to a model which has additional predictors. For example,</p>
+<p><span class="math display">\[
+\begin{aligned}
+(\text{Response})_i
+  &amp;= \beta_0 + \beta_1 (\text{Predictor 1})_i + \beta_2 \left((\text{Predictor 1})_i - t_1\right)_+^3 \\
+  &amp;\qquad - \beta_2 \frac{\left((\text{Predictor 1})_i - t_2\right)_+^3 \left(t_3 - t_1\right)}{t_3 - t_2} + \beta_2 \frac{\left((\text{Predictor 1})_i - t_3\right)_+^3 \left(t_2 - t_1\right)}{t_3 - t_2} \\
+  &amp;\qquad + \beta_3 (\text{Predictor 2})_i + \varepsilon_i
+\end{aligned}
+\]</span></p>
+<p>captures curvature in the first predictor using a restricted cubic spline with three knot points while allowing the second predictor to enter the model linearly. We note that while it appears this model is much more complex, only a single additional term is needed to capture the curvature on the first predictor.</p>
+<p>Once we have the additional elements in the model to capture the curvature with the spline, we can actually perform a hypothesis test to determine if the additional complexity is needed. Consider the model in <a href="#eq-modeling-rcs">Equation&nbsp;<span>12.2</span></a>, the hypothesis</p>
+<p><span class="math display">\[H_0: \beta_2 = \beta_3 = \dotsc = \beta_{k-1} = 0\]</span></p>
+<p>imposes the constraint that each of the spline components be removed from the model. That is, under this hypothesis, a linear relationship is sufficient for modeling the relationship between the response and the predictor.</p>
+<p><a href="#fig-modeling-splines-rcs">Figure&nbsp;<span>12.3</span></a> illustrates a restricted cubic spline with five knot points. We point out that there is quite a bit of curvature here, and yet this is captured by a linear model!</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-modeling-splines-rcs" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="./images/fig-modeling-splines-rcs-1.png" class="img-fluid figure-img" style="width:80.0%" alt="Curved line captured created by spline."></p>
+<figcaption class="figure-caption">Figure&nbsp;12.3: Illustration of a restricted cubic spline with five knot points.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Both types of splines can be fit using standard software if we are willing to program the above formulas; however, statistical software often has a direct implementation.</p>
+<p>There are nonparametric approaches to capturing curvature as well (“loess” curves are popular choices). We prefer splines to nonparametric approaches as splines require less computation and can be easily implemented in any software. Further, splines can be placed in a semiparametric model allowing us to capture complex curvature without extremely large sample sizes. Finally, since splines can be implemented within a linear model, we can easily test to determine if the additional complexity is needed.</p>
+<p>Linear splines allow for very easy interpretation since the relationships are linear in each region. Restricted cubic splines, in contrast, have intractable interpretations but provide a lot of flexibility. In general, if the predictor that requires a spline is the primary variable of interest, we recommend trying a linear spline. If however, the predictor is just being adjusted for in the model, and the curvature is not of primary importance, using a restricted cubic spline with five knot points is typically sufficient.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When a categorical predictor is modeled using a series of indicator variables, linearity cannot be violated for these components. This is known as a “saturated” model because no simplifying assumptions about the structure have been enforced. As a result, violations of linearity and their subsequent adjustments (like splines) are only considered for quantitative predictors.</p>
+</div>
+</div>
+<p>As in the previous chapters of this unit, we introduced splines in the context of the linear model. However, they can be incorporated into a vast number of regression models.</p>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./03f-modeling-large-sample-theory.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Large Sample Theory</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./04a-rm.html" class="pagination-link">
+        <span class="nav-page-text">Unit IV: Models for Repeated Measures</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

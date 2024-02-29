@@ -1,0 +1,1 @@
+{"frames":[{"func":"density(bootRosner$estimate, n = 1024, from = min(bootRosner$estimate), \n    to = max(bootRosner$estimate))","file":"","line_number":0,"end_line_number":0,"character_number":0,"end_character_number":0}],"message":"Error: object 'bootRosner' not found\n"}

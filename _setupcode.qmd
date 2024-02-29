@@ -1,0 +1,87 @@
+```{r}
+#| include: false
+
+# Define default chunk options
+knitr::opts_chunk$set(
+  fig.path = "./images/",
+  out.width = '80%'
+)
+
+
+# Load necessary packages
+import::from(boot, boot)
+import::from(car, Boot, linearHypothesis, .carEnv)
+import::from(splines, ns)
+import::from(rms, lsp, pol, rcs)
+import::from(skimr, skim)
+library(survival)
+library(geepack)
+library(lme4)
+library(tidyverse)
+library(broom)
+library(broom.mixed)
+library(kableExtra)
+library(gganimate)
+library(reyescourses)
+library(reyesr)
+
+
+
+# Additional Options
+options(knitr.kable.NA = '',
+        dplyr.show_progress = FALSE,
+        contrasts = rep("contr.treatment", 2),
+        mc.cores = (parallel::detectCores() - 2))
+
+# Graphic Options
+theme_set(theme_bw(12))
+theme_update(legend.position = "bottom",
+             legend.box = "vertical",
+             legend.direction = "horizontal")
+```
+
+```{r}
+#| echo: false
+#| output: asis
+
+reyesr::print_latex_commands()
+```
+
+```{r}
+#| label: data-rosner214
+#| echo: false
+
+dfRosner2.14 <- tibble(
+  Patient = c("BRA", "JAB", "FLB", "VPB", "MFB", "EHB", 
+              "GC", "MMC", "TJF", "RRF", "CRF", "EWG", 
+              "TFH", "EJH", "HBH", "RTK", "WEL", "RLL",
+              "HSM", "VJM", "RHP", "RCR", "JAR", "AKR",
+              "THS", "OES", "RES", "ECT", "JHT", "FPV",
+              "PFW", "WJW"),
+  SBP = c(99, 126, 108, 122, 104, 108, 116, 106, 118, 92, 110, 138,
+          120, 142, 118, 134, 118, 126, 108, 136, 110, 120, 108, 132,
+          102, 118, 116, 118, 110, 122, 106, 146),
+  DBP = c(71, 74, 72, 68, 64, 60, 70, 74, 82, 58, 78, 80,
+          70, 88, 58, 76, 72, 78, 78, 86, 78, 74, 74, 92,
+          68, 70, 76, 80, 74, 72, 62, 90)
+)
+```
+
+```{r}
+#| label: data-enzyme
+#| include: false
+
+enzyme <- tibble(
+  Subject = rep(seq(6), times = 4),
+  Supplement = rep(c("Placebo", "Tablet", "Coated", "Uncoated"), each = 6) |>
+    factor(levels = c("Placebo", "Tablet", "Coated", "Uncoated"), 
+           labels = c("Placebo", "Tablet",
+                      "Coated Capsule", "Uncoated Capsule"),
+           ordered = TRUE),
+  `Fecal Fat` = c(44.5, 33.0, 19.1, 9.4, 71.3, 51.2,
+                   7.3, 21.0,  5.0, 4.6, 23.3, 38.0,
+                  12.4, 25.6, 22.0, 5.8, 68.2, 52.6,
+                   3.4, 23.1, 11.8, 4.6, 25.6, 36.0)
+)
+```
+

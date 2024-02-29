@@ -1,0 +1,9 @@
+"0","#| label: fig-distributional-quartet-sampling-distribution"
+"0","#| echo: false"
+"0","#| fig-cap: Empirical model for the sampling distribution of mean systolic blood pressure for a sample of 32 participants. A 95% confidence interval is also illustrated."
+"0","#| fig-alt: Bell curve representing the model for the sampling distribution with two vertical lines, one in each tail, to represent the middle 95% of the curve which is the confidence interval."
+"0",""
+"0",".dens <- density(bootRosner$estimate, n = 1024,"
+"0","                 from = min(bootRosner$estimate), to = max(bootRosner$estimate))"
+"2","Error: object 'bootRosner' not found
+"

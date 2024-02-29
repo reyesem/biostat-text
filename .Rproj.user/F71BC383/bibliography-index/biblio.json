@@ -1,0 +1,230 @@
+{
+    "sources": [
+        {
+            "author": [
+                {
+                    "family": "Wickham",
+                    "given": "Hadley"
+                }
+            ],
+            "container-title": "Journal of Statistical Software",
+            "id": "Wickham2014",
+            "issue": "10",
+            "issued": {
+                "date-parts": [
+                    [
+                        2014
+                    ]
+                ]
+            },
+            "page": "1-23",
+            "title": "Tidy data",
+            "type": "article-journal",
+            "volume": "59"
+        },
+        {
+            "author": [
+                {
+                    "family": "Rosner",
+                    "given": "Bernard"
+                }
+            ],
+            "edition": "6th",
+            "id": "Rosner2006",
+            "issued": {
+                "date-parts": [
+                    [
+                        2006
+                    ]
+                ]
+            },
+            "publisher": "Thomson-Brooks/Cole",
+            "publisher-place": "CA",
+            "title": "Fundamentals of biostatistics",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Vittinghoff",
+                    "given": "Eric"
+                },
+                {
+                    "family": "Glidden",
+                    "given": "David V."
+                },
+                {
+                    "family": "Shiboski",
+                    "given": "Stephen C."
+                },
+                {
+                    "family": "McCulloch",
+                    "given": "Charles E."
+                }
+            ],
+            "edition": "2nd",
+            "id": "Vittinghoff2012",
+            "issued": {
+                "date-parts": [
+                    [
+                        2012
+                    ]
+                ]
+            },
+            "publisher": "Springer-Verlag",
+            "publisher-place": "NY",
+            "title": "Regression methods in biostatistics: Linear logistic, survival, and repeated measures models",
+            "title-short": "Regression methods in biostatistics",
+            "type": "book"
+        },
+        {
+            "URL": "https://www.R-project.org/",
+            "author": [
+                {
+                    "literal": "R Core Team"
+                }
+            ],
+            "id": "R-base",
+            "issued": {
+                "date-parts": [
+                    [
+                        2023
+                    ]
+                ]
+            },
+            "publisher": "R Foundation for Statistical Computing",
+            "publisher-place": "Vienna, Austria",
+            "title": "R: A language and environment for statistical computing",
+            "title-short": "R",
+            "type": "book"
+        },
+        {
+            "URL": "https://github.com/rstudio/bookdown",
+            "author": [
+                {
+                    "family": "Xie",
+                    "given": "Yihui"
+                }
+            ],
+            "id": "R-bookdown",
+            "issued": {
+                "date-parts": [
+                    [
+                        2023
+                    ]
+                ]
+            },
+            "note": "R package version 0.36, https://pkgs.rstudio.com/bookdown/",
+            "title": "Bookdown: Authoring books and technical documents with r markdown",
+            "title-short": "Bookdown",
+            "type": "book"
+        },
+        {
+            "URL": "https://github.com/ddsjoberg/gtsummary",
+            "author": [
+                {
+                    "family": "Sjoberg",
+                    "given": "Daniel D."
+                },
+                {
+                    "family": "Larmarange",
+                    "given": "Joseph"
+                },
+                {
+                    "family": "Curry",
+                    "given": "Michael"
+                },
+                {
+                    "family": "Lavery",
+                    "given": "Jessica"
+                },
+                {
+                    "family": "Whiting",
+                    "given": "Karissa"
+                },
+                {
+                    "family": "Zabor",
+                    "given": "Emily C."
+                }
+            ],
+            "id": "R-gtsummary",
+            "issued": {
+                "date-parts": [
+                    [
+                        2023
+                    ]
+                ]
+            },
+            "note": "R package version 1.7.2, https://www.danieldsjoberg.com/gtsummary/",
+            "title": "Gtsummary: Presentation-ready data summary and analytic result tables",
+            "title-short": "Gtsummary",
+            "type": "book"
+        },
+        {
+            "ISBN": "978-1138700109",
+            "URL": "https://bookdown.org/yihui/bookdown",
+            "author": [
+                {
+                    "family": "Xie",
+                    "given": "Yihui"
+                }
+            ],
+            "id": "bookdown2016",
+            "issued": {
+                "date-parts": [
+                    [
+                        2016
+                    ]
+                ]
+            },
+            "publisher": "Chapman; Hall/CRC",
+            "publisher-place": "Boca Raton, Florida",
+            "title": "Bookdown: Authoring books and technical documents with R markdown",
+            "title-short": "Bookdown",
+            "type": "book"
+        },
+        {
+            "DOI": "10.32614/RJ-2021-053",
+            "URL": "https://doi.org/10.32614/RJ-2021-053",
+            "author": [
+                {
+                    "family": "Sjoberg",
+                    "given": "Daniel D."
+                },
+                {
+                    "family": "Whiting",
+                    "given": "Karissa"
+                },
+                {
+                    "family": "Curry",
+                    "given": "Michael"
+                },
+                {
+                    "family": "Lavery",
+                    "given": "Jessica A."
+                },
+                {
+                    "family": "Larmarange",
+                    "given": "Joseph"
+                }
+            ],
+            "container-title": "The R Journal",
+            "id": "gtsummary",
+            "issued": {
+                "date-parts": [
+                    [
+                        2021
+                    ]
+                ]
+            },
+            "page": "570-580",
+            "title": "Reproducible summary tables with the gtsummary package",
+            "type": "article-journal",
+            "volume": "13"
+        }
+    ],
+    "project_biblios": [
+        "refs482notes.bib",
+        "packages.bib"
+    ]
+}

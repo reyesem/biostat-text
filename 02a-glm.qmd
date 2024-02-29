@@ -1,0 +1,3 @@
+# Unit II: General Linear Model {-}
+
+The general linear model, also known as multiple linear regression, provides a framework appropriate for modeling a continuous outcome (response) as a function of several predictors. We introduce the framework and illustrate how it unifies the methods typically discussed in an introductory statistics course.  

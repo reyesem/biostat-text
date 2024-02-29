@@ -1,0 +1,70 @@
+project:
+  type: book
+  output-dir: 'docs'
+
+book:
+  title: 'Statistical Modeling for the Biological Sciences'
+  output-file: 'ma482-text'
+  author: 'Eric M Reyes'
+  
+  downloads: [pdf]
+  reader-mode: true
+  search: true
+  
+  sidebar: 
+    style: docked
+    title: 'Biostatistics'
+    
+  
+  date: last-modified
+  date-format: '[Updated: ] DD MMMM YYYY'
+  
+  chapters:
+    - index.qmd
+    - part: 01a-review.qmd
+      chapters: 
+        - 01b-statistical-process.qmd
+        - 01c-distributional-quartet.qmd
+        - 01d-essential-probability.qmd
+    - part: 02a-glm.qmd
+      chapters: 
+        - 02b-glm-model-framework.qmd
+        - 02c-glm-assessing-conditions.qmd
+        - 02d-glm-unifying-framework.qmd
+    - part: 03a-modeling.qmd
+      chapters: 
+        - 03b-modeling-related-predictors.qmd
+        - 03c-modeling-categorical-predictors.qmd
+        - 03d-modeling-interactions.qmd
+        - 03e-modeling-linear-hypotheses.qmd
+        - 03f-modeling-large-sample-theory.qmd
+        - 03g-modeling-splines.qmd
+    - part: 04a-rm.qmd
+      chapters:
+        - 04b-rm-terminology.qmd
+        - 04c-rm-mixed-models.qmd
+        - 04d-rm-gee.qmd
+    - references.qmd
+  appendices: 
+    - app-glossary.qmd
+
+bibliography: [refs482notes.bib, packages.bib]
+
+comments: 
+  hypothesis: false
+
+format:
+  html:
+    theme: cosmo
+    css: mystyles.css
+  pdf:
+    documentclass: scrreprt
+    keep-tex: true
+
+execute:
+  echo: false
+  warning: false
+  error: false
+  
+fig-align: center
+fig-cap-location: bottom

@@ -1,0 +1,6 @@
+"0","#| label: statistical-process-model"
+"0","#| echo: false"
+"0",""
+"0","m1.hypothetical <- "
+"0","  glm(I(spontaneous>0) ~ `Treatment Group`, "
+"0","      family = ""binomial"", data = mydat)"

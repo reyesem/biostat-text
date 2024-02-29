@@ -1,0 +1,68 @@
+{
+  "index.qmd": {
+    "index.html": "f0e1266c"
+  },
+  "01a-review.qmd": {
+    "01a-review.html": "3e1a51d2"
+  },
+  "01b-statistical-process.qmd": {
+    "01b-statistical-process.html": "79215d26"
+  },
+  "references.qmd": {
+    "references.html": "db334525"
+  },
+  "app-glossary.qmd": {
+    "app-glossary.html": "461afa73"
+  },
+  "01c-distributional-quartet.qmd": {
+    "01c-distributional-quartet.html": "7d5cdaac"
+  },
+  "01d-essential-probability.qmd": {
+    "01d-essential-probability.html": "f68e2efa"
+  },
+  "02a-glm.qmd": {
+    "02a-glm.html": "0f392a97"
+  },
+  "02b-glm-model-framework.qmd": {
+    "02b-glm-model-framework.html": "fc36ff3b"
+  },
+  "02c-glm-assessing-conditions.qmd": {
+    "02c-glm-assessing-conditions.html": "379d88c8"
+  },
+  "02d-glm-unifying-framework.qmd": {
+    "02d-glm-unifying-framework.html": "8273d257"
+  },
+  "03a-modeling.qmd": {
+    "03a-modeling.html": "74c92746"
+  },
+  "03b-modeling-related-predictors.qmd": {
+    "03b-modeling-related-predictors.html": "d2f8deb9"
+  },
+  "03c-modeling-categorical-predictors.qmd": {
+    "03c-modeling-categorical-predictors.html": "b880206a"
+  },
+  "03d-modeling-interactions.qmd": {
+    "03d-modeling-interactions.html": "1419f4a1"
+  },
+  "03e-modeling-linear-hypotheses.qmd": {
+    "03e-modeling-linear-hypotheses.html": "4ae7c01c"
+  },
+  "03f-modeling-large-sample-theory.qmd": {
+    "03f-modeling-large-sample-theory.html": "43a9c43f"
+  },
+  "03g-modeling-splines.qmd": {
+    "03g-modeling-splines.html": "a89d5a42"
+  },
+  "04a-rm.qmd": {
+    "04a-rm.html": "ba198603"
+  },
+  "04b-rm-terminology.qmd": {
+    "04b-rm-terminology.html": "d9af341b"
+  },
+  "04c-rm-mixed-models.qmd": {
+    "04c-rm-mixed-models.html": "5db88b73"
+  },
+  "04d-rm-gee.qmd": {
+    "04d-rm-gee.html": "c589cf1b"
+  }
+}

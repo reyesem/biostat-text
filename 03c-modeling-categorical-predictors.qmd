@@ -1,0 +1,177 @@
+# Incorporating Categorical Predictors {#sec-modeling-categorical-predictors}
+
+{{< include _setupcode.qmd >}}
+
+The general linear model framework (@def-general-linear-model) is quite flexible; in particular, it allows us to consider not only quantitative predictors, but also categorical (qualitative) predictors.  Our strategy is to define a new set of quantitative variables which capture the group membership appropriately.
+
+:::{#exm-perceived-stress}
+## Perceived Stress
+The _Perceived Stress Scale (PSS)_ is a widely used psychological instrument for measuring the perception of stress. Subjects answer ten short questions regarding the degree to which situations in their life are viewed as stressful, and the responses are codified into a score between 0 and 40 (higher values indicate higher stress). Suppose we were interested in modeling the PSS score among college students as a function of their class standing (Freshman, Sophomore, Junior, Senior) and the number of hours of sleep the student reports getting on a typical night.  The first few records in our data might hypothetically look like that illustrated in @tbl-modeling-categorical-predictors-stress-data.
+:::
+
+```{r}
+#| label: tbl-modeling-categorical-predictors-stress-data
+#| tbl-cap: Hypothetical data on stress in college students.
+#| echo: false
+
+set.seed(123)
+
+mydat <- tibble(
+  `Subject ID` = sample((1001:2000), size = 10, replace = FALSE),
+  PSS = sample(40, size = length(`Subject ID`), replace = TRUE),
+  `Hours Sleep` = sample(seq(4, 9, by = 0.5), size = length(`Subject ID`),
+                         replace = TRUE),
+  `Class Standing` = sample(c("Freshman", "Sophomore", "Junior", "Senior"),
+                            size = length(`Subject ID`), replace = TRUE)
+)
+
+mydat |>
+  mykable()
+```
+
+It does not take long to recognize that forming a model like
+
+$$(\text{PSS Score})_i = \beta_0 + \beta_1 (\text{Hours Sleep})_i + \beta_2 (\text{Class Standing})_i + \varepsilon_i$$
+
+does not work.  Since class standing is a categorical variable, plugging in does not make sense; that is, what does it mean to multiply $\beta_2$ by "Junior"?  We need a way of somehow bringing the categorical predictor into the linear model.  Before stating our approach, let's first consider two common naive approaches:
+
+  - Replace each level of the categorical predictor with a number: convert Freshman to 1, Sophomore to 2, Junior to 3, and Senior to 4; enter this numeric variable into a regression model.
+  - Construct different data sets for each level of the categorical predictor: four data sets in this case with one for Freshman, one for Sophomore, one for Junior, and one for Senior; conduct a different analysis on each set of data.
+
+The first approach solves the "number times word" problem.  We could certainly fit such a model.  However, this approach is limiting.  It assumes a linear trend across the levels of the categorical predictor.  Are we sure that the stress either increases or decreases as the class standing increases?  Do we want to allow the stress to be highest during the sophomore year?  More problematic are categorical predictors which have no natural ordering (e.g., eye color); how do we determine the mapping from text to numbers in that case?  
+
+The second approach sounds reasonable at first glance.  It would yield four different models:
+
+$$
+\begin{aligned}
+  \text{Model 1}:& (\text{PSS Score})_i = \gamma_{\text{FR}} + 
+    \alpha_{\text{FR}} (\text{Hours Sleep})_i + \varepsilon_{1,i} \\
+  \text{Model 2}:& (\text{PSS Score})_i = \gamma_{\text{SO}} + 
+    \alpha_{\text{SO}} (\text{Hours Sleep})_i + \varepsilon_{2,i} \\
+  \text{Model 3}:& (\text{PSS Score})_i = \gamma_{\text{JR}} + 
+    \alpha_{\text{JR}} (\text{Hours Sleep})_i + \varepsilon_{3,i} \\
+  \text{Model 4}:& (\text{PSS Score})_i = \gamma_{\text{SR}} + 
+    \alpha_{\text{SR}} (\text{Hours Sleep})_i + \varepsilon_{4,i}.
+\end{aligned}
+$$
+
+In these models, we have different parameters for each group.  The problem is that we no longer have a single estimate for the impact of the number of hours of sleep; we have a different estimate for each group.  Further, we would have a different estimate of the residual variance for each model, which would not align with the condition of assuming the variance is constant for all values of the predictors.  This approach diminishes the power of the study, and it does not make it easy to address some questions of interest (such as, do freshman and sophomores differ in their PSS score?).
+
+Neither of these approaches seems to fully capture our goal.  Instead, we create multiple new variables that capture the qualitative grouping.  Consider defining new variables as follows
+
+$$
+\begin{aligned}
+  (\text{Sophomore})_i &= \begin{cases}
+    1 & \text{if i-th subject is a sophomore} \\
+    0 & \text{otherwise}
+    \end{cases} \\
+  (\text{Junior})_i &= \begin{cases}
+    1 & \text{if i-th subject is a junior} \\
+    0 & \text{otherwise}
+    \end{cases} \\
+  (\text{Senior})_i &= \begin{cases}
+    1 & \text{if i-th subject is a senior} \\
+    0 & \text{otherwise.}
+    \end{cases}
+\end{aligned}
+$$
+      
+Augmenting our original data set with these new predictors would result in the data set illustrated in @tbl-modeling-categorical-predictors-stress-data-aug.
+
+```{r}
+#| label: tbl-modeling-categorical-predictors-stress-data-aug
+#| tbl-cap: Hypothetical data on stress in college students augmented to include additional variables capturing the class standing.
+#| echo: false
+
+mydat |>
+  mutate(
+    Sophomore = case_when(
+      `Class Standing` == "Sophomore" ~ 1,
+      TRUE ~ 0
+    ),
+    Junior = case_when(
+      `Class Standing` == "Junior" ~ 1,
+      TRUE ~ 0
+    ),
+    Senior = case_when(
+      `Class Standing` == "Senior" ~ 1,
+      TRUE ~ 0
+    )
+  ) |>
+  mykable()
+```
+
+Using these additional variables, consider the model
+
+$$
+\begin{aligned}
+  (\text{PSS Score})_i &= \beta_0 + \beta_1 (\text{Hours Sleep})_i + \beta_2 (\text{Sophomore})_i \\
+    &\qquad + \beta_3 (\text{Junior})_i + \beta_4 (\text{Senior})_i + \varepsilon_i.
+\end{aligned}
+$$
+
+This model embeds the grouping structure while only having one parameter for the effect of sleep on the PSS score and one parameter for the residual variance.  You might at first think "what happened to freshman?"  To see what is really happening with this model, think about what the structure provides us.  Suppose we are considering freshman students who get $x$ hours of sleep; for this group of students, the value of the variables `Sophomore`, `Junior`, and `Senior` are all zero.  Plugging into the deterministic portion of the model, we find that the average PSS score for this group is
+
+$$\beta_0 + \beta_1 x + \beta_2 (0) + \beta_3 (0) + \beta_4 (0) = \beta_0 + \beta_1 x.$$
+
+The fact that each of the variables `Sophomore`, `Junior`, and `Senior` take either the value 0 or 1 makes the arithmetic work out nicely.  We can easily write down the average PSS score for each group for a specific number of hours of sleep:
+
+$$
+\begin{aligned}
+  E\left[\text{PSS Score} \mid \text{Hours Sleep, Freshman}\right]
+    &= \beta_0 + \beta_1 (\text{Hours Sleep}) \\
+  E\left[\text{PSS Score} \mid \text{Hours Sleep, Sophomore}\right]
+    &= \left(\beta_0 + \beta_2\right) + \beta_1 (\text{Hours Sleep})\\
+  E\left[\text{PSS Score} \mid \text{Hours Sleep, Junior}\right]
+    &= \left(\beta_0 + \beta_3\right) + \beta_1 (\text{Hours Sleep}) \\
+  E\left[\text{PSS Score} \mid \text{Hours Sleep, Senior}\right]
+    &= \left(\beta_0 + \beta_4\right) + \beta_1 (\text{Hours Sleep}). \\
+\end{aligned}
+$$
+      
+So, freshman did not disappear from the model; they were there all along in the intercept.  This strategy relies on capturing the grouping structure through a series of binary (0 or 1) variables, known as indicator variables.
+
+:::{#def-indicator-variables}
+## Indicator Variables
+Also called "dummy variables," these are a set of binary variables that capture the grouping defined by a categorical variable for regression modeling.
+:::
+
+Indicator variables are like light switches that click on or off in order to specify that a particular subject (or population of subjects) with the corresponding characteristic is being considered.  The way that we have defined these variables ensures that no two light switches are on at the same time; each subject is a member of exactly one group (a student must have a class standing and cannot have two class standings simultaneously; that is, a student cannot be classified as both a freshman and a sophomore).
+
+:::{.callout-note}
+A categorical predictor with $k$ groups/levels requires $k-1$ indicator variables to fully capture the grouping structure.
+:::
+
+One group (known as the reference group) will always be captured by the intercept term; the choice of this group is arbitrary and is often chosen by the software package (perhaps alphabetically, for example).  Note that if the only difference between two models is the choice of the reference group, the models result in equivalent inference (though the interpretation of the parameters differs).
+
+:::{#def-reference-group}
+## Reference Group
+The group defined by having all indicator variables for a particular categorical variable set to zero.
+:::
+
+Recall that provided the "mean 0" condition on the error holds, we have an interpretation of the coefficients in the model (@def-slope).  This yields a nice interpretation of the coefficients for indicator variables.
+
+:::{.callout-note}
+## Interpretation of Coefficient for Indicator
+Let $\beta$ be the parameter corresponding to an indicator variable in a linear model; then, $\beta$ is the difference in the _average_ response between the group defined by that indicator taking the value 1 and the reference group _holding all other predictors fixed_.
+:::
+
+This does create a situation we have not yet encountered.  Suppose we are interested in determining if the PSS score is associated with class standing after accounting for the hours of sleep the student gets on a typical night.  The hypothesis is no longer of the form
+
+$$H_0: \beta_j = 0 \qquad \text{vs.} \qquad H_1: \beta_j \neq 0$$
+
+for some $j$.  Instead, there are several predictors in the model which capture class standing.  We need to instead consider testing multiple parameters _simultanesously_.
+
+:::{.callout-tip}
+## Big Idea
+The statistical significance of a categorical predictor is assessed by testing if _all_ corresponding indicator variables are simultaneously 0.
+:::
+
+In our case, we would be testing a hypothesis of the form
+
+$$H_0: \beta_2 = \beta_3 = \beta_4 = 0 \qquad \text{vs.} \qquad H_1: \text{at least one of these } \beta_j \text{ not equal to 0}.$$
+
+We will address hypotheses of this form in @sec-modeling-linear-hypotheses.
+
+We end this section by stating that while our discussion centered on the inclusion of categorical predictors in the linear model, this is a general modeling technique.  Regardless of the type of regression model, categorical predictors can be included through the use of indicator variables.
+ 

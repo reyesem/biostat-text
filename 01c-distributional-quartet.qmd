@@ -1,0 +1,203 @@
+# Distributional Quartet {#sec-distributional-quartet}
+
+{{< include _setupcode.qmd >}}
+
+Any good statistical analysis moves between four key distributions --- what we refer to as the _Distributional Quartet_.  While not always explicitly discussed, these distributions are always present in an analysis.  Understanding their role is important to implementing and interpreting an analysis.
+
+We begin by considering the following example from @Rosner2006.
+
+:::{#exm-distributional-quartet-bp}
+## Blood Pressure when Lying Down
+Blood pressure is one metric for the health of your heart.  A blood pressure reading includes two numbers --- the systolic blood pressure (the "top number," measures the amount of pressure in your arteries when your heart contracts) and the diastolic blood pressure (the "bottom number," measures the amount of pressure in your arteries when your heart is between beats).  
+
+An individual does not have a single blood pressure reading; our blood pressure fluctuates as a result of activity as well as our position.  In a study examining the impact of position on blood pressure, 32 participants had their blood pressure measured while lying down with their arms at their sides.
+:::
+
+Stated simply, the discipline of statistics is about using data to say something about a process that characterizes a population.  Our analysis, therefore, begins with the __Distribution of the Population__.
+
+:::{.callout-important}
+## Distribution of the Population
+The pattern of variability in values of a variable across individuals of the population. The shape of this distribution is governed by unknown parameters.  While we generally do not know the shape of this distribution, we may occasionally posit a model for it.
+:::
+
+We are interested in using the data from this study to characterize the systolic blood pressure of individuals when in this recumbent position, with their arm at their side.  Of course, we are unable to assess the blood pressure of all individuals in the world.  Therefore, we do not know what the distribution of systolic blood pressure measurements is for this population.  However, we _might_ posit a model for this distribution.  Such models, which must account for the variability among the population, are studied in probability theory, which we consider in the next section.  For now, it suffices to imagine the distribution of the population graphically; it is characterized by the unknown parameters (@fig-distributional-quartet-population).
+
+
+```{r}
+#| label: fig-distributional-quartet-population
+#| echo: false
+#| fig-cap: Hypothetical model for the distribution of systolic blood pressure within the population.  The unknown population mean is denoted on the graphic.
+#| fig-alt: Curve with higher values indicating values of systolic blood pressure which are more common in the population. There is a vertical line representing the population mean.
+
+ggplot(data = dfRosner2.14,
+       mapping = aes(x = SBP)) +
+  geom_density(linewidth = 1.1, bw = 10) +
+  geom_vline(xintercept = mean(dfRosner2.14$SBP), color = "blue") +
+  annotate("label", x = mean(dfRosner2.14$SBP), y = 0, 
+           label = 'mu', 
+           parse = TRUE) +
+  labs(y = NULL,
+       x = "Systolic Blood Pressure (mm Hg)") +
+  theme_minimal(14) +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+The data we actually observe comes from the sample, and we will use this smaller group to say something about the underlying population.  It is the distribution of sample which we are summarizing each time we construct a graphic.
+
+:::{.callout-important}
+## Distribution of the Sample
+The pattern of variability in values of a variable across individuals of the sample. This is typically summarized graphically and numerically.
+:::
+
+@fig-distributional-quartet-sample summarizes the sample using a histogram.  If our sample is collected well, then it should be representative of the population, meaning that the distribution of the sample should reflect the characteristics of the (unobserved) distribution of the population.  The location, spread, and shape should all reflect what we might see within the population.  
+
+```{r}
+#| label: fig-distributional-quartet-sample
+#| echo: false
+#| fig-cap: Distribution of systolic blood pressure within the observed sample of 32 participants.
+#| fig-alt: Histogram of systolic blood pressure readings.
+
+ggplot(data = dfRosner2.14,
+       mapping = aes(x = SBP)) +
+  geom_histogram(binwidth = 8, color = "black", fill = "grey75") +
+  geom_vline(xintercept = mean(dfRosner2.14$SBP), color = "blue") +
+  annotate("label", x = mean(dfRosner2.14$SBP), y = 0, 
+           label = 'bar(x) == 117.4',
+           parse = TRUE) +
+  labs(y = "Number of Participants",
+       x = "Systolic Blood Pressure (mm Hg)") +
+  theme_minimal(14)
+```
+
+Examining the sample is critical to understanding the story in the data.  We must remember, however, that the statistics we compute using our sample are dependent upon the data we observed.  If we were to repeat the sampling process (collect new data to answer the same question), our statistics would change.  Good inference requires us to acknowledge this sampling variability and incorporate it when making statements about the population.
+
+:::{.callout-important}
+## Sampling Distribution
+The pattern of variability in values of a _statistic_ (or standardized statistic) across repeated samples of the same size from the population.  This must be modeled in practice.
+:::
+
+```{r}
+#| label: distributional-quartet-ci
+#| echo: false
+
+set.seed(123)
+
+bootRosner <- modelr::bootstrap(dfRosner2.14, 5000) |>
+  mutate(estimate = map_dbl(strap, ~ mean(as.data.frame(.x)$SBP)))
+
+bootRosnerCI <- quantile(bootRosner$estimate, c(0.025, 0.975)) |>
+  scales::label_number(accuracy = 0.1)()
+```
+
+As we are generally unable to perform replicate studies, we model the sampling distribution using the data available (future chapters will discuss the various methods available for modeling this distribution).  The model for the sampling distribution allows us to determine values of the parameter for which the data is consistent.  That is, it allows us to compute a confidence interval to estimate a parameter of interest.  For example, a 95% CI for the mean systolic blood pressure (mm Hg, when recumbent with arm at their side), based on our data available, is (`r bootRosnerCI[1]`, `r bootRosnerCI[2]`); this is illustrated in @fig-distributional-quartet-sampling-distribution alongside the model for the sampling distribution of the sample mean systolic blood pressure from which the CI was computed.
+
+```{r}
+#| label: fig-distributional-quartet-sampling-distribution
+#| echo: false
+#| fig-cap: Empirical model for the sampling distribution of mean systolic blood pressure for a sample of 32 participants. A 95% confidence interval is also illustrated.
+#| fig-alt: Bell curve representing the model for the sampling distribution with two vertical lines, one in each tail, to represent the middle 95% of the curve which is the confidence interval.
+
+.dens <- density(bootRosner$estimate, n = 1024,
+                 from = min(bootRosner$estimate), to = max(bootRosner$estimate))
+
+.dens <- tibble(x = .dens$x,
+                y = .dens$y)
+
+numbootRosnerCI <- as.numeric(bootRosnerCI)
+
+ggplot(data = .dens,
+       mapping = aes(x = x,
+                     y = y)) +
+  geom_area(fill = NA, color = "black") +
+  geom_area(data = filter(.dens, x >= numbootRosnerCI[1] & 
+                            x <= numbootRosnerCI[2]),
+            fill = "red", color = "black") +
+  geom_vline(xintercept = numbootRosnerCI[1], color = "red", linetype = 2) +
+  geom_vline(xintercept = numbootRosnerCI[2], color = "red", linetype = 2) +
+  annotate("label", y = 0, x = numbootRosnerCI[1], label = bootRosnerCI[1]) +
+  annotate("label", y = 0, x = numbootRosnerCI[2], label = bootRosnerCI[2]) +
+  annotate("label", y = mean(.dens$y), x = mean(.dens$x),
+           label = paste0('95% CI: (', bootRosnerCI[1], ', ', 
+                          bootRosnerCI[2], ')')) +
+  labs(x = "Sample Mean Systolic Blood Pressure Across Repeated Samples") +
+  theme_minimal(14) +
+  theme(axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+While statisticians generally have a preference toward estimation (and therefore reporting confidence intervals), scientists often have specific research questions they would like to address.  When this is the case, the scientist may want to quantify the strength of evidence in the sample against some specified hypothesis.  In order to determine how rare our data is, we must know what we should expect under the specified hypothesis.
+
+:::{.callout-important}
+## Null Distribution
+The sampling distribution of a statistic (or standardized "test" statistic) _when the null hypothesis is true_.  This must be modeled in practice.
+:::
+
+The null distribution effectively tells us what values of the statistic we would expect to see if the null hypothesis were true.  If our observed statistic seems plausible according to the null distribution, then it follows that the null hypothesis is reasonable.  If, on the other hand, our observed statistic is unexpected according to the null distribution, then we have evidence that the null hypothesis is false (and therefore that the alternative is true).  That is, we are able to statistically discern the difference between our data and what we would have expected to see under the null hypothesis.  Note that these are our only two potential conclusions.  The strength of the evidence is quantified by the p-value.  For example, suppose we are interested in using our data to test the following set of hypotheses:
+
+$$H_0: \mu = 120 \qquad \text{vs.} \qquad H_1: \mu \neq 120,$$
+
+where $\mu$ represents the average systolic blood pressure of an individual when lying down.
+
+```{r}
+#| label: distributional-quartet-pval
+#| echo: false
+
+set.seed(123)
+
+statRosner <- mean(dfRosner2.14$SBP)
+
+nullRosner <- dfRosner2.14 |>
+  mutate(SBP = SBP - mean(SBP) + 120) |>
+  modelr::bootstrap(5000) |>
+  mutate(estimate = map_dbl(strap, ~ mean(as.data.frame(.x)$SBP)))
+
+nullRosnerP <- mean(nullRosner$estimate <= statRosner |
+                      nullRosner$estimate >= (120 + (120 - statRosner))) |>
+  scales::label_pvalue(prefix = c('p < ', 'p = ', 'p > '))()
+```
+
+
+That is, we are interested in determining if there is evidence that, on average, the systolic blood pressure (recumbent with arm at side) differs from 120 mm Hg.  According to the data, it is reasonable (`r nullRosnerP`) that the average systolic blood pressure is 120 mm Hg.  The computation of the p-value is illustrated in @fig-distributional-quartet-null-distribution alongside the model for the null distribution for this particular hypothesis.
+
+```{r}
+#| label: fig-distributional-quartet-null-distribution
+#| echo: false
+#| fig-cap: Empirical model for the null distribution of mean systolic blood pressure within the sample of 32 participants when the null hypothesis is that the mean systolic blood pressure is 120 mm Hg.  The p-value is also illustrated.
+#| fig-alt: Bell curve illustrating the null distribution with the tail area shaded to capture the p-value.
+
+.dens <- density(nullRosner$estimate, n = 1024,
+                 from = min(nullRosner$estimate), to = max(nullRosner$estimate))
+
+.dens <- tibble(x = .dens$x,
+                y = .dens$y)
+
+ggplot(data = .dens,
+       mapping = aes(x = x,
+                     y = y)) +
+  geom_area(fill = NA, color = "black") +
+  geom_area(data = filter(.dens, x <= statRosner),
+            fill = "red", color = "black") +
+  geom_area(data = filter(.dens, x >= 240 - statRosner),
+            fill = "red", color = "black") +
+  geom_vline(xintercept = statRosner, color = "red", linetype = 2) +
+  geom_vline(xintercept = 240 - statRosner, color = "red", linetype = 2) +
+  annotate("label", y = 0, x = statRosner, label = round(statRosner, 1)) +
+  annotate("label", y = 0, x = 240 - statRosner, 
+           label = round(240 - statRosner, 1)) +
+  annotate("label", y = mean(.dens$y), x = 120, label = nullRosnerP) +
+  labs(x = "Sample Mean Systolic Blood Pressure Across Repeated Samples") +
+  theme_minimal(14) +
+  theme(axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+Our focus in this short review is not this specific analysis.  The emphasis here is on the _process_ --- the use of the four distributions used in a statistical analysis.  They allow us to take the sample and make inference on the underlying population.  As we move forward in the course, we will study more sophisticated models.  However, behind the scenes, the procedures are always bouncing between these four distributions in order to allow us to make inference.
+
+:::{.callout-note}
+Note that we construct a _model_ for the sampling distribution of a statistic or a _model_ for the null distribution of a (standardized) statistic.  All models are simplifications of complex processes; and, the validity of each model requires certain conditions be true about the data generating process.
+
+Generally, we must make assumptions about the data generating process.  Therefore, the reliability of these models, and consequently our analysis, depends on whether these assumptions are reasonable.  We must always keep in mind that our analysis is subject to the assumptions we make.
+:::

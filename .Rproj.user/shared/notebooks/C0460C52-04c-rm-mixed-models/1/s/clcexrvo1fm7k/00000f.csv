@@ -1,0 +1,8 @@
+"0","#| label: rm-mixed-enzyme-glm"
+"0","#| include: false"
+"0",""
+"0",""
+"0","fit1.enzyme <- lm(`Fecal Fat` ~ Supplement, data = enzyme)"
+"0","fit0.enzyme <- lm(`Fecal Fat` ~ 1, data = enzyme)"
+"0",""
+"0","aov.enzyme <- anova(fit0.enzyme, fit1.enzyme)"

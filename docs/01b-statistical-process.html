@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Statistical Modeling for the Biological Sciences - 1&nbsp; Overview of the Statistical Process</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./01c-distributional-quartet.html" rel="next">
+<link href="./01a-review.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="mystyles.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01a-review.html">Unit I: Review of Statistics and Probability</a></li><li class="breadcrumb-item"><a href="./01b-statistical-process.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Overview of the Statistical Process</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Biostatistics</a> 
+        <div class="sidebar-tools-main">
+    <a href="./ma482-text.pdf" rel="" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./01a-review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit I: Review of Statistics and Probability</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01b-statistical-process.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Overview of the Statistical Process</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01c-distributional-quartet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Distributional Quartet</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01d-essential-probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Essential Probability</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./02a-glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit II: General Linear Model</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02b-glm-model-framework.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">General Linear Model Framework</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02c-glm-assessing-conditions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Assessing the Conditions for the General Linear Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02d-glm-unifying-framework.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">The General Linear Model as a Unifying Framework</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./03a-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit III: General Modeling Techniques</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03b-modeling-related-predictors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Addressing Relationships Between Predictors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03c-modeling-categorical-predictors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Incorporating Categorical Predictors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03d-modeling-interactions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Allowing Effect Modification (Interaction Terms)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03e-modeling-linear-hypotheses.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">General Linear Hypothesis Test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03f-modeling-large-sample-theory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Large Sample Theory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03g-modeling-splines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Modeling Curvature (Splines)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./04a-rm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit IV: Models for Repeated Measures</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04b-rm-terminology.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Language of Repeated Measures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04c-rm-mixed-models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mixed Effects Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04d-rm-gee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Generalized Estimating Equations</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app-glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview-of-drawing-inference" id="toc-overview-of-drawing-inference" class="nav-link active" data-scroll-target="#overview-of-drawing-inference"><span class="header-section-number">1.1</span> Overview of Drawing Inference</a></li>
+  <li><a href="#data-storage" id="toc-data-storage" class="nav-link" data-scroll-target="#data-storage"><span class="header-section-number">1.2</span> Data Storage</a></li>
+  <li><a href="#tabular-data-presentation" id="toc-tabular-data-presentation" class="nav-link" data-scroll-target="#tabular-data-presentation"><span class="header-section-number">1.3</span> Tabular Data Presentation</a></li>
+  <li><a href="#graphical-data-presentation" id="toc-graphical-data-presentation" class="nav-link" data-scroll-target="#graphical-data-presentation"><span class="header-section-number">1.4</span> Graphical Data Presentation</a></li>
+  <li><a href="#basic-terminology-for-statistical-tests" id="toc-basic-terminology-for-statistical-tests" class="nav-link" data-scroll-target="#basic-terminology-for-statistical-tests"><span class="header-section-number">1.5</span> Basic Terminology for Statistical Tests</a></li>
+  <li><a href="#a-note-on-codebooks" id="toc-a-note-on-codebooks" class="nav-link" data-scroll-target="#a-note-on-codebooks"><span class="header-section-number">1.6</span> A Note on Codebooks</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-statistical-process" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Overview of the Statistical Process</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Research is about telling a story, and good data presentation and statistical inference can help tell that story in a compelling way. This chapter cannot replace an introductory course on statistical analysis. We strive to give practical advice for data storage, presentation, and analysis while presenting a framework for inference; it is within this context that we review terminology fundamental to our study of statistical models in the biological sciences.</p>
+<section id="overview-of-drawing-inference" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="overview-of-drawing-inference"><span class="header-section-number">1.1</span> Overview of Drawing Inference</h2>
+<p>Every research question posed is trying to characterize a <strong>population</strong>.</p>
+<div id="def-population" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.1 (Population) </strong></span>The collection of subjects we would like to say something about.</p>
+</div>
+<p>It is often impossible (or impractical) to observe the entire population. Instead, we make observations on a subset of the population; this smaller group is known as the <strong>sample</strong>.</p>
+<div id="def-sample" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.2 (Sample) </strong></span>The collection of subjects for which we actually obtain measurements (data).</p>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We acknowledge the weight of the term “subject” when discussing human participants. Medical research has not been immune to unjust practices exploiting marginalized groups within society. While the term persists in the description of research practices in general, we opt for the term “participants” when describing those individuals who actually participate in a study.</p>
+<p>While the semantics may seem a small component, this small shift adds a human element to the analysis. It is important to remember that each observation within the data has a story, and when those stories represent the lives of others, they deserve our full respect.</p>
+</div>
+</div>
+<p>For each subject within the sample, we obtain a collection of measurements, which form our data. This could be the result, for example, of a survey, examination of medical records, or a prospective study which follows subjects for a lengthy period of time. The goal of statistical modeling is to use the sample (the group we actually observe) to say something about the population of interest (the group we wish we had observed); this process is known as <strong>statistical inference</strong> and is illustrated in <a href="#fig-statistical-process-statistical-process">Figure&nbsp;<span>1.1</span></a>.</p>
+<div id="def-inference" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.3 (Statistical Inference) </strong></span>The process of using a sample to characterize some aspect of the underlying population.</p>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-statistical-process-statistical-process" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="images/Statistical-Process-Statistical-Process.jpg" class="img-fluid figure-img" style="width:80.0%" alt="Series of blobs forming a cycle, representing information coming from the population to the sample and back to the population."></p>
+<figcaption class="figure-caption">Figure&nbsp;1.1: Illustration of the statistical process.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="data-storage" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="data-storage"><span class="header-section-number">1.2</span> Data Storage</h2>
+<p>Each measurement, or piece of information, you record for a subject is a different <strong>variable</strong>.</p>
+<div id="def-variable" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.4 (Variable) </strong></span>A measurement, or category, describing some aspect of the subject.</p>
+</div>
+<p>In order to conduct analysis, it is best to adhere to “tidy data principles” <span class="citation" data-cites="Wickham2014">(<a href="references.html#ref-Wickham2014" role="doc-biblioref">Wickham 2014</a>)</span> when storing data. In brief:</p>
+<ol type="1">
+<li>Each column contains a unique variable.</li>
+<li>Each record (or row in the data set) corresponds to a different observation of the variable(s). If each subject is only measured once (a single survey for each subject, for example), each record will correspond to a different subject. If, on the other hand, each subject is measured multiple times (the same survey is given prior to an appointment and at a specified follow-up period, for example), there may be multiple records which correspond to the same subject, but each record corresponds to a unique observation.</li>
+<li>If you have multiple data sets, there should be a variable in the table that allows the various tables to be linked (subject identifier). For larger more complex studies, for example, you may have one table that has the demographic information of subjects and a separate table which contains the lab results for the subjects.</li>
+<li>The first row in the data set should have the names of each variable.</li>
+</ol>
+<p>The above description eliminates a common method of data storage — placing different groups in different spreadsheets. All observations should be stored together. The first few records of a hypothetical data set are illustrated in <a href="#tbl-statistical-process-tidy-data">Table&nbsp;<span>1.1</span></a>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-statistical-process-tidy-data" class="anchored">
+<div class="table-responsive">
+<table class="table table-striped table-sm small" data-quarto-postprocess="true">
+<caption>Table&nbsp;1.1: Example of storying data according to “tidy data” principles. Data is from a hypothetical study.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Subject ID</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Education</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Age (yrs)</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Parity</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Number of Miscarriages</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Treatment Group</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1089</td>
+<td style="text-align: left;">0-5yrs</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Active Treatment</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1160</td>
+<td style="text-align: left;">0-5yrs</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Active Treatment</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1025</td>
+<td style="text-align: left;">0-5yrs</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Active Treatment</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1035</td>
+<td style="text-align: left;">0-5yrs</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Active Treatment</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1112</td>
+<td style="text-align: left;">6-11yrs</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Active Treatment</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1030</td>
+<td style="text-align: left;">6-11yrs</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Active Treatment</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1159</td>
+<td style="text-align: left;">0-5yrs</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Placebo</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1207</td>
+<td style="text-align: left;">0-5yrs</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Placebo</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1179</td>
+<td style="text-align: left;">0-5yrs</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Placebo</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1014</td>
+<td style="text-align: left;">0-5yrs</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">Placebo</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1195</td>
+<td style="text-align: left;">6-11yrs</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Placebo</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1170</td>
+<td style="text-align: left;">6-11yrs</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Placebo</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+</div>
+</div>
+<p>Once your data has been placed in a spreadsheet, it should be kept separate from the analysis. Any changes to the data should be done using your analysis file so that those changes are clearly documented alongside the analysis. While it may be easy, it is poor practice to include graphics and numeric summaries in the same spreadsheet as the data. If you want your data to be <em>portable</em> (easily opened by any spreadsheet or analysis software package), save your data as a comma separated file (CSV).</p>
+</section>
+<section id="tabular-data-presentation" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="tabular-data-presentation"><span class="header-section-number">1.3</span> Tabular Data Presentation</h2>
+<p>If you have several variables you want to summarize, this is probably best done using a table. For example, you may want to summarize the demographics of the subjects in your study across each treatment group. How a variable is summarized depends on its type. <strong>Qualitative</strong> (or <strong>categorical</strong>) variables define a grouping or categorization of a subject (e.g., race, treatment group, etc.). When summarizing qualitative data, we generally report the number of subjects in each group and the corresponding percentage of the sample.</p>
+<div id="def-categorical-variable" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.5 (Categorical Variable) </strong></span>Also called a “qualitative variable,” a measurement on a subject which denotes a grouping or categorization.</p>
+</div>
+<p><strong>Quantitative</strong> (or <strong>numeric</strong>) variables are those measurements for which arithmetic makes sense (e.g., heart rate, age). These variables are generally summarized by reporting both a measure of location and spread; this could be mean and standard deviation or median and interquartile range.</p>
+<div id="def-numeric-variable" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.6 (Numeric Variable) </strong></span>Also called a “quantitative variable,” a measurement on a subject which takes on a numeric value <em>and</em> for which ordinary arithmetic makes sense.</p>
+</div>
+<p>If you are not comparing groups of subjects, it is reasonable to report results for the entire sample. If the goal of your research is to compare groups (such as rural vs.&nbsp;urban residents), we typically summarize data within each group and present the comparisons side by side. <a href="#tbl-statistical-process-data-summary">Table&nbsp;<span>1.2</span></a> summarizes the data from our hypothetical study, allowing the reader to compare the treatment and placebo groups. Notice that while we might think of the number of miscarriages as being a numeric variable, when there are only a small number of possibilities, we might treat that variable as categorical for the purposes of summarizing it.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-statistical-process-data-summary" class="anchored">
+
+<div id="fgipqumuhu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#fgipqumuhu table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#fgipqumuhu thead, #fgipqumuhu tbody, #fgipqumuhu tfoot, #fgipqumuhu tr, #fgipqumuhu td, #fgipqumuhu th {
+  border-style: none;
+}
+
+#fgipqumuhu p {
+  margin: 0;
+  padding: 0;
+}
+
+#fgipqumuhu .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#fgipqumuhu .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#fgipqumuhu .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#fgipqumuhu .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#fgipqumuhu .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#fgipqumuhu .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fgipqumuhu .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#fgipqumuhu .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#fgipqumuhu .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#fgipqumuhu .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#fgipqumuhu .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#fgipqumuhu .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#fgipqumuhu .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#fgipqumuhu .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#fgipqumuhu .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#fgipqumuhu .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#fgipqumuhu .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#fgipqumuhu .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#fgipqumuhu .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fgipqumuhu .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#fgipqumuhu .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#fgipqumuhu .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#fgipqumuhu .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fgipqumuhu .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#fgipqumuhu .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#fgipqumuhu .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fgipqumuhu .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fgipqumuhu .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#fgipqumuhu .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fgipqumuhu .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#fgipqumuhu .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fgipqumuhu .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#fgipqumuhu .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fgipqumuhu .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#fgipqumuhu .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fgipqumuhu .gt_left {
+  text-align: left;
+}
+
+#fgipqumuhu .gt_center {
+  text-align: center;
+}
+
+#fgipqumuhu .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#fgipqumuhu .gt_font_normal {
+  font-weight: normal;
+}
+
+#fgipqumuhu .gt_font_bold {
+  font-weight: bold;
+}
+
+#fgipqumuhu .gt_font_italic {
+  font-style: italic;
+}
+
+#fgipqumuhu .gt_super {
+  font-size: 65%;
+}
+
+#fgipqumuhu .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#fgipqumuhu .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#fgipqumuhu .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#fgipqumuhu .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#fgipqumuhu .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#fgipqumuhu .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#fgipqumuhu .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false"><caption>Table&nbsp;1.2:  <p>Summary of patient characteristics from our hypothetical study.</p> </caption>
+  <thead>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Active Treatment</strong>, N = 165<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Active Treatment</strong>, N = 165<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Placebo</strong>, N = 83<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Placebo</strong>, N = 83<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">Education</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;0-5yrs</td>
+<td headers="stat_1" class="gt_row gt_center">8 (4.8%)</td>
+<td headers="stat_2" class="gt_row gt_center">4 (4.8%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;6-11yrs</td>
+<td headers="stat_1" class="gt_row gt_center">80 (48%)</td>
+<td headers="stat_2" class="gt_row gt_center">40 (48%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;12+ yrs</td>
+<td headers="stat_1" class="gt_row gt_center">77 (47%)</td>
+<td headers="stat_2" class="gt_row gt_center">39 (47%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Age</td>
+<td headers="stat_1" class="gt_row gt_center">30.51 (2.67)</td>
+<td headers="stat_2" class="gt_row gt_center">31.53 (5.28)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Parity</td>
+<td headers="stat_1" class="gt_row gt_center">2.08 (1.24)</td>
+<td headers="stat_2" class="gt_row gt_center">2.11 (1.28)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Number of Miscarriages</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;0</td>
+<td headers="stat_1" class="gt_row gt_center">113 (68%)</td>
+<td headers="stat_2" class="gt_row gt_center">28 (34%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;1</td>
+<td headers="stat_1" class="gt_row gt_center">40 (24%)</td>
+<td headers="stat_2" class="gt_row gt_center">31 (37%)</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;2</td>
+<td headers="stat_1" class="gt_row gt_center">12 (7.3%)</td>
+<td headers="stat_2" class="gt_row gt_center">24 (29%)</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="3"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> n (%); Mean (SD)</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+</div>
+</div>
+</div>
+<p>When reporting numerical summaries within the body of your report, it is good to keep the same format as you adopt in the table; for example, summarizing a qualitative variables with N (%).</p>
+<p>Statistics is generally concerned with explaining the variation in a variable, and that is characterized by its <strong>distribution</strong>. When we summarize a variable, whether numerically or graphically, we are actually summarizing this distribution.</p>
+<div id="def-distribution" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.7 (Distribution) </strong></span>The pattern of variability corresponding to a set of values.</p>
+</div>
+</section>
+<section id="graphical-data-presentation" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="graphical-data-presentation"><span class="header-section-number">1.4</span> Graphical Data Presentation</h2>
+<p>As the saying goes, a picture is worth 1000 words. Each graphic you construct, however, should add value to the story you are telling. We primarily reserve graphics for conveying a message about our primary <strong>response</strong>.</p>
+<div id="def-response" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.8 (Response Variable) </strong></span>Also called the “outcome,” this is the primary variable of interest in the research question; it is the variable we either want to explain or predict.</p>
+</div>
+<p>As with tabular data presentation, our approach to graphical presentation depends on the type of variable being summarized. For example, while a scatter-plot is well suited for examining the relationship between two quantitative variables, side-by-side box-plots are better suited for examining the relationship between a quantitative response and a categorical predictor.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Following best practices in the research community, we recommend the use of a <em>bar chart</em> instead of a <em>pie chart</em> when examining a categorical response. Bar charts are often less cluttered and more clearly communicate the same information.</p>
+</div>
+</div>
+<p><a href="#fig-statistical-process-graphics">Figure&nbsp;<span>1.2</span></a> illustrates two graphics (one for a qualitative and one for a quantitative response); again, in practice, your graphics should be driven by your research question.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-statistical-process-graphics" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="./images/fig-statistical-process-graphics-1.png" class="img-fluid figure-img" style="width:80.0%" alt="Bar chart summarizing distribution of the number of miscarriages next to a set of side-by-side boxplots with raw data overlaid showing the distribution of the patients age across treatment groups."></p>
+<figcaption class="figure-caption">Figure&nbsp;1.2: Two graphical presentations of data from a hypothetical study, adhering to good graphical practices.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Notice that the left panel of the graphic makes use of bar charts to compare a qualitative variable (number of miscarriages) across a second qualitative variable (treatment group). The use of color here is important because it brings out additional features that do not appear on the x- or y-axis. The right panel of the graphic makes use of box-plots (with jitter-plots overlaid) to compare a quantitative variable (age of the patient) across the qualitative variable (treatment group). One idea worth discussing here is that a graphical summary of a quantitative variable should always portray both <em>location</em> and <em>spread</em>. Notice that in the right panel in <a href="#fig-statistical-process-graphics">Figure&nbsp;<span>1.2</span></a>, we see that the ages of patients receiving placebo are comparable (in location) to that of those receiving the active treatment; however, the variability in the ages of patients receiving placebo is much larger compared to those receiving the active treatment. Compare this to <a href="#fig-statistical-process-poor-graphics">Figure&nbsp;<span>1.3</span></a>, which only summarizes location with no sense of spread; while this is a popular default graphic in some software, it does not adequately allow a reader to determine the size of the effect relative to the variability in the data.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-statistical-process-poor-graphics" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="./images/fig-statistical-process-poor-graphics-1.png" class="img-fluid figure-img" style="width:80.0%" alt="Bars used to represent the mean age in different groups."></p>
+<figcaption class="figure-caption">Figure&nbsp;1.3: Inappropriate graphical presentation from a hypothetical study as it ignores a sense of variability in the data.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="basic-terminology-for-statistical-tests" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="basic-terminology-for-statistical-tests"><span class="header-section-number">1.5</span> Basic Terminology for Statistical Tests</h2>
+<p>In some cases, summarizing the data numerically and graphically is sufficient for telling a compelling story. Often, however, the summaries are accompanied by a statistical analysis. Regardless of the simplicity (or complexity) of the statistical procedure, there are a few fundamental ideas which are common to all methods.</p>
+<p>A <strong>statistic</strong> (summary of data) is a point estimate of a <strong>parameter</strong> (corresponding value in the population of interest). For example, the value 2.08 in <a href="#tbl-statistical-process-data-summary">Table&nbsp;<span>1.2</span></a> is the average number of children among those women in the study who received the active treatment; but, it <em>estimates</em> the average number of children among all women in the population who receive the active treatment.</p>
+<div id="def-parameter" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.9 (Parameter) </strong></span>Numeric quantity which summarizes the distribution of a variable within the <em>population</em> of interest. Generally denoted by Greek letters in statistical formulas.</p>
+</div>
+<div id="def-statistic" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.10 (Statistic) </strong></span>Numeric quantity which summarizes the distribution of a variable within the observed <em>sample</em>.</p>
+</div>
+<p>Instead of estimating a parameter with this single value, we can estimate the parameter with a <strong>confidence interval</strong> (a 95% confidence interval is standard practice).</p>
+<div id="def-confidence-interval" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.11 (Confidence Interval) </strong></span>An interval (range of values) estimate of a parameter that incorporates the variability in the statistic. The process of constructing <span class="math inline">\(k\)</span>% confidence intervals results in them containing the parameter of interest in <span class="math inline">\(k\)</span>% of <em>repeated</em> studies. The value of <span class="math inline">\(k\)</span> is called the <em>confidence level</em>.</p>
+</div>
+<p>It is important to recognize that the entire interval is our estimate. In text, we generally report the point estimate with the 95% confidence interval in parentheses. For example,</p>
+<blockquote class="blockquote">
+<p>The probability of a miscarriage is 0.32 (95% CI: [0.25, 0.39]) for women given the active treatment.</p>
+</blockquote>
+<p>There are several common misinterpretations of a confidence interval; generally, these do not enter the literature because we avoid interpreting the interval directly and simply state it and discuss its implications (as above). For completeness, however, it is best to think of a confidence interval as giving all the reasonable values of the parameter based on the data observed.</p>
+<p>While confidence intervals estimate an effect, a <strong>p-value</strong> quantifies the amount of evidence in the data against the lack of an effect.</p>
+<div id="def-pvalue" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.12 (P-Value) </strong></span>The probability, assuming the null hypothesis is true, that we would observe a statistic, from sampling variability alone, as extreme or more so as that observed in our sample. This quantifies the strength of evidence against the null hypothesis. Smaller values indicate stronger evidence.</p>
+</div>
+<p>We generally report a p-value to 3 decimal places (with values less than 0.001 being written as “&lt; 0.001”). It is best to state p-values alongside the conclusion. For example,</p>
+<blockquote class="blockquote">
+<p>There is strong evidence (p &lt; 0.001) that the active treatment reduces the risk of a miscarriage.</p>
+</blockquote>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There are two very important things to keep in mind when examining a p-value:</p>
+<ol type="1">
+<li>A small p-value does not imply the effect is clinically relevant/important. It simply indicates that we are able to statistically discern an effect/difference is present.</li>
+<li>A large p-value does not imply there is no effect/difference. It simply indicates that we cannot statistically discern the presence of an effect/difference.</li>
+</ol>
+</div>
+</div>
+<p>For these reasons, a p-value should always be accompanied by either a confidence interval (preferred when possible) or a point estimate of the effect to allow readers to determine if the impact is clinically relevant.</p>
+<p>When interpreting statistical results, the design of the study plays a role. In particular, we can only conclude a causal relationship when the data is from a <strong>randomized clinical trial</strong>. When your data is from an <strong>observational study</strong>, any group comparisons are subject to <strong>confounding</strong>.</p>
+<div id="def-randomized-clinical-trial" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.13 (Randomized Clinical Trial) </strong></span>Also called a “controlled experiment,” a study in which each participant is randomly assigned to one of the groups being compared in the study.</p>
+</div>
+<div id="def-observational-study" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.14 (Observational Study) </strong></span>A study in which each participant “self-selects” into one of groups being compared in the study. The phrase “self-selects” is used very loosely here and can include studies in which the groups are defined by an inherent characteristic, the groups are determined according to a non-random mechanism, and each participant chooses the group to which they belong.</p>
+</div>
+<div id="def-confounding" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.15 (Confounding) </strong></span>When the effect of a variable on the response is mis-represented due to the presence of a third, potentially unobserved, variable known as a confounder.</p>
+</div>
+<div id="exm-dental-health" class="theorem example">
+<p><span class="theorem-title"><strong>Example 1.1 (Dental Health and Cardiovascular Disease) </strong></span>It has been suggested that brushing your teeth twice a day for at least two minutes may lower the risk of cardiovascular diseases<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>However, most of these results are from large surveys, which are observational studies. It is quite plausible that those who take excellent care of their teeth tend to be health-conscious individuals, and health-conscious individuals are more likely to have healthy diets and exercise regularly, both of which decrease the risk of cardiovascular diseases.</p>
+</div>
+<p>In <a href="#exm-dental-health">Example&nbsp;<span>1.1</span></a>, being health-conscious is a confounder because it is associated with <em>both</em> the factor under study (brushing behavior) <em>and</em> the outcome of interest (cardiovascular disease); see <a href="#fig-statistical-process-confounding">Figure&nbsp;<span>1.4</span></a>. In order to establish a causal link between brushing and the risk of cardiovascular disease, we could conduct a clinical trial in which we randomize patients to a brushing routine and then track their long-term cardiovascular health; in this design, the link between the confounder and the treatment group is broken, allowing us to make a causal conclusion. While clinical trials allow for causal conclusions, they are not always feasible or practical; observational studies allow us to add to the body of knowledge in such situations. There are some methods for addressing confounding in observational studies through statistical analysis, but such methods often require a large sample and more advanced methodology.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-statistical-process-confounding" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="images/Statistical-Process-Confounding.jpg" class="img-fluid figure-img" style="width:80.0%" alt="Three circles showing a directional diagram; one circle represents the predictor, another the confounder, and the last the response.  The confounder is connected to both the predictor and the response."></p>
+<figcaption class="figure-caption">Figure&nbsp;1.4: Illustration of confounding in observational studies.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="a-note-on-codebooks" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="a-note-on-codebooks"><span class="header-section-number">1.6</span> A Note on Codebooks</h2>
+<p>A dataset on its own is meaningless if you cannot understand what the values represent. <em>Before</em> you access a dataset, you should always review any available <strong>codebook</strong>.</p>
+<div id="def-codebook" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 1.16 (Codebook) </strong></span>Also called a “data dictionary,” a codebook provides complete information regarding the variables contained within a dataset.</p>
+</div>
+<p>Some codebooks are excellent, with detailed descriptions of how the variables were collected and appropriate units. Other codebooks give only an indication of what each variable represents. Whenever you are working with previously collected data, reviewing a codebook is the first step; and, you should be prepared to revisit the codebook often throughout an analysis. When you are collecting your own dataset, constructing a codebook is essential for others to make use of your data.</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-Wickham2014" class="csl-entry" role="listitem">
+Wickham, Hadley. 2014. <span>“Tidy Data.”</span> <em>Journal of Statistical Software</em> 59 (10): 1–23.
+</div>
+</div>
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p><a href="https://www.heart.org/en/news/2018/11/07/bad-tooth-brushing-habits-tied-to-higher-heart-risk">https://www.heart.org/en/news/2018/11/07/bad-tooth-brushing-habits-tied-to-higher-heart-risk</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./01a-review.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Unit I: Review of Statistics and Probability</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./01c-distributional-quartet.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Distributional Quartet</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

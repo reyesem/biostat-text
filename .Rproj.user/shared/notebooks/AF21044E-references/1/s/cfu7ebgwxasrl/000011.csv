@@ -1,0 +1,5 @@
+"0","#| label: write-bib"
+"0","#| include: false"
+"0",""
+"0","# Automatically create a bib database for R packages"
+"0","knitr::write_bib(c(.packages(), 'gtsummary', 'bookdown'), 'packages.bib')"

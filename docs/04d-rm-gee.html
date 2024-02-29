@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Statistical Modeling for the Biological Sciences - 15&nbsp; Generalized Estimating Equations</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./04c-rm-mixed-models.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="mystyles.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04a-rm.html">Unit IV: Models for Repeated Measures</a></li><li class="breadcrumb-item"><a href="./04d-rm-gee.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Generalized Estimating Equations</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Biostatistics</a> 
+        <div class="sidebar-tools-main">
+    <a href="./ma482-text.pdf" rel="" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./01a-review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit I: Review of Statistics and Probability</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01b-statistical-process.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Overview of the Statistical Process</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01c-distributional-quartet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Distributional Quartet</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01d-essential-probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Essential Probability</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./02a-glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit II: General Linear Model</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02b-glm-model-framework.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">General Linear Model Framework</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02c-glm-assessing-conditions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Assessing the Conditions for the General Linear Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02d-glm-unifying-framework.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">The General Linear Model as a Unifying Framework</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./03a-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit III: General Modeling Techniques</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03b-modeling-related-predictors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Addressing Relationships Between Predictors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03c-modeling-categorical-predictors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Incorporating Categorical Predictors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03d-modeling-interactions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Allowing Effect Modification (Interaction Terms)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03e-modeling-linear-hypotheses.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">General Linear Hypothesis Test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03f-modeling-large-sample-theory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Large Sample Theory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03g-modeling-splines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Modeling Curvature (Splines)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./04a-rm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit IV: Models for Repeated Measures</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04b-rm-terminology.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Language of Repeated Measures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04c-rm-mixed-models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mixed Effects Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04d-rm-gee.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Generalized Estimating Equations</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app-glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#correlation-structrues" id="toc-correlation-structrues" class="nav-link active" data-scroll-target="#correlation-structrues"><span class="header-section-number">15.1</span> Correlation Structrues</a></li>
+  <li><a href="#the-key-to-success-of-generalized-estimating-equations" id="toc-the-key-to-success-of-generalized-estimating-equations" class="nav-link" data-scroll-target="#the-key-to-success-of-generalized-estimating-equations"><span class="header-section-number">15.2</span> The Key to Success of Generalized Estimating Equations</a></li>
+  <li><a href="#comparison-of-gee-and-mixed-effects-approaches" id="toc-comparison-of-gee-and-mixed-effects-approaches" class="nav-link" data-scroll-target="#comparison-of-gee-and-mixed-effects-approaches"><span class="header-section-number">15.3</span> Comparison of GEE and Mixed Effects Approaches</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-rm-gee" class="quarto-section-identifier"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Generalized Estimating Equations</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p><a href="04b-rm-terminology.html"><span>Chapter&nbsp;13</span></a> discussed how studies with repeated measures induce a correlation structure on the data. The previous chapter addressed this correlation structure by developing a hierarchical model in stages, capturing the correlation structure as a by-product. That is, we did not model the correlation directly; instead, by first describing the individual-level model and then allowing the parameters of that model to vary across individuals in the population, the correlation structure was handled naturally. In this chapter, we consider an alternate approach where we focus on modeling the overall average trajectory and the the correlation structure directly. While very general, this approach is particularly popular in longitudinal studies (<a href="04b-rm-terminology.html#def-longitudinal-study">Definition&nbsp;<span>13.11</span></a>).</p>
+<section id="correlation-structrues" class="level2" data-number="15.1">
+<h2 data-number="15.1" class="anchored" data-anchor-id="correlation-structrues"><span class="header-section-number">15.1</span> Correlation Structrues</h2>
+<p><a href="04b-rm-terminology.html"><span>Chapter&nbsp;13</span></a> defined the correlation structure as a summary of the relationship among the errors in the response. In a mixed effects model (<a href="04c-rm-mixed-models.html#def-mixed-effects-model">Definition&nbsp;<span>14.4</span></a>), we considered the various sources of variability as contributing to the correlation structure; in this chapter, we are interested in modeling the structure directly. As a result, we are interested in the overall impact of the sources of variability on this structure. By specifying this structure, at least approximately, we are able to adjust the standard errors of our parameter estimates to obtain appropriate inference.</p>
+<p>We can think of the correlation on the error terms of our model as a combination of between-subject and within-subject sources of variability. While we may not be discussing the specific sources of variability, they are just as important as before to help us determine an appropriate form of the correlation structure. We are generally willing to assume that observations from different subjects (or blocks) are independent; therefore, when we describe the correlation structure of the errors, we need only focus on the correlation of the observations from the same subject. Further, we assume that the correlation structure is the same for every subject. Therefore, there is only one correlation structure to be specified, and it will be shared across all subjects.</p>
+<p>Recall from your introductory course that the correlation coefficient captures the strength and direction of the linear relationship between two variables and must be a value between -1 and 1. If each subject has five observations (for example), then we need to describe the relationship between any pair of these five observations. That is, we need <span class="math inline">\(\binom{5}{2} = 10\)</span> correlation coefficients. We store these in a matrix</p>
+<p><span id="eq-rm-correlation"><span class="math display">\[\Gamma = \begin{pmatrix}
+1 &amp; \rho_{1,2} &amp; \rho_{1,3} &amp; \rho_{1,4} &amp; \rho_{1,5} \\
+\cdot &amp; 1 &amp; \rho_{2,3} &amp; \rho_{2,4} &amp; \rho_{2,5} \\
+\cdot &amp; \cdot &amp; 1 &amp; \rho_{3,4} &amp; \rho_{3,5} \\
+\cdot &amp; \cdot &amp; \cdot &amp; 1 &amp; \rho_{4,5} \\
+\cdot &amp; \cdot &amp; \cdot &amp; \cdot &amp; 1 \end{pmatrix}, \tag{15.1}\]</span></span></p>
+<p>where the lower-half is determined from the upper-half since the correlation between the <span class="math inline">\(i\)</span>-th and <span class="math inline">\(j\)</span>-th observations is the same as the correlation between the <span class="math inline">\(j\)</span>-th and <span class="math inline">\(i\)</span>-th observations; that is, <span class="math inline">\(\rho_{i,j} = \rho_{j,i}\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Properties of Correlation Matrices
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Every correlation matrix has the following properties:</p>
+<ol type="1">
+<li>It is a square matrix, and the dimension is determined by the number of observations within a subject.</li>
+<li>It is symmetric (the transpose is the same as the original matrix). That is, <span class="math inline">\(\rho_{i,j} = \rho_{j,i}\)</span>.</li>
+<li>The diagonal entries are always 1; any value is perfectly correlated with itself.</li>
+<li>All off-diagonal elements must be between -1 and 1.</li>
+</ol>
+</div>
+</div>
+<p>A correlation matrix is very similar to a variance-covariance matrix; in fact, we can think of a correlation matrix as a standardized variance-covariance matrix.</p>
+<p>The correlation matrix in <a href="#eq-rm-correlation">Equation&nbsp;<span>15.1</span></a> makes no assumptions about the structure of the off-diagonal elements (other than they are values between -1 and 1). This is known as an unstructured form.</p>
+<div id="def-unstructured-correlation-structure" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 15.1 (Unstructured Correlation Structure) </strong></span>An unstructured correlation structure suggests that the correlation between any two errors within a subject can take on any value. We only require that it be a valid correlation matrix.</p>
+</div>
+<p>If we think of each correlation as an additional parameter to estimate, then we have just specified an additional <span class="math inline">\(\binom{m}{2}\)</span> parameters to our model, where <span class="math inline">\(m\)</span> is the number of repeated observations on a subject. We are essentially choosing not to place any structure on the correlation matrix and allow the data to completely determine the structure. This can be useful if we have no intuition about the sources of variability; however, it requires a lot of data as we have added a large number of parameters to the model.</p>
+<p>As in any model, there is tension between specifying a model which is flexible and one which is more tractable. We often impose some simplifying structure on the correlation matrix. While there are several possible structures, we discuss the most common. On the other extreme from the unstructured correlation matrix discussed above is to assume the observations within a subject are independent of one another.</p>
+<div id="def-independence-correlation-structure" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 15.2 (Independence Correlation Structure) </strong></span>An independence correlation structure suggests there is no correlation among any of the error terms within a subject. If there are five observations within a block, this has the form</p>
+<p><span class="math display">\[\Gamma = \begin{pmatrix}
+1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+\cdot &amp; 1 &amp; 0 &amp; 0 &amp; 0 \\
+\cdot &amp; \cdot &amp; 1 &amp; 0 &amp; 0 \\
+\cdot &amp; \cdot &amp; \cdot &amp; 1 &amp; 0 \\
+\cdot &amp; \cdot &amp; \cdot &amp; \cdot &amp; 1 \end{pmatrix}.\]</span></p>
+</div>
+<p>While we already assume that observations between subjects are independent, the independence structure goes further and essentially says all observations are independent. At first glance, this would seem to revert back to the classical regression model, which we have already established is inappropriate for repeated measures. However, we will argue later that using such a structure does have some differences.</p>
+<p>When we feel that observations from the same subject are associated primarily because they are from the same subject, and that the order of the observations within the subject is irrelevant, a compound symmetric correlation structure is appropriate.</p>
+<div id="def-compound-symmetric-correlation-structure" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 15.3 (Compound Symmetric Correlation Structure) </strong></span>A compound symmetric correlation structure, also known as an <em>exchangeable</em> correlation structure, suggests the correlation between any two errors within a subject is equal. If there are five observations within a block, this has the form</p>
+<p><span class="math display">\[\Gamma = \begin{pmatrix}
+1 &amp; \rho &amp; \rho &amp; \rho &amp; \rho \\
+\cdot &amp; 1 &amp; \rho &amp; \rho &amp; \rho \\
+\cdot &amp; \cdot &amp; 1 &amp; \rho &amp; \rho \\
+\cdot &amp; \cdot &amp; \cdot &amp; 1 &amp; \rho \\
+\cdot &amp; \cdot &amp; \cdot &amp; \cdot &amp; 1 \end{pmatrix}.\]</span></p>
+</div>
+<p>The compound symmetric structure adds only one additional parameter to our model and actually models well many scenarios. When we do believe that the order of the observations within a subject is important, and that observations occurring closer together (generally in time) are more highly correlated than observations further apart in time, an autoregressive structure is appropriate.</p>
+<div id="def-autoregressive-correlation-structure" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 15.4 (Autoregressive Correlation Structure) </strong></span>An autoregressive correlation structure suggests the correlation between two observations diminishes as the observations get further apart (generally, further apart in time). We generally only consider the autoregressive structure of degree 1 here; if there are five observations within a block, this has the form</p>
+<p><span class="math display">\[\Gamma = \begin{pmatrix}
+1 &amp; \rho &amp; \rho^2 &amp; \rho^3 &amp; \rho^4 \\
+\cdot &amp; 1 &amp; \rho &amp; \rho^2 &amp; \rho^3 \\
+\cdot &amp; \cdot &amp; 1 &amp; \rho &amp; \rho^2 \\
+\cdot &amp; \cdot &amp; \cdot &amp; 1 &amp; \rho \\
+\cdot &amp; \cdot &amp; \cdot &amp; \cdot &amp; 1 \end{pmatrix}.\]</span></p>
+</div>
+<p>The autoregressive structure is borrowed from the time-series literature. It is primarily useful when we are taking observations somewhat close together in time. Like the compound symmetric structure, it only adds a single parameter to the model.</p>
+<p>Regardless of which of the structures we believe is beneath the data, we also assume stationarity.</p>
+<div id="def-stationarity" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 15.5 (Stationarity) </strong></span>The assumption of stationarity states that the correlation structure does not depend on time, only the distance between the observations.</p>
+</div>
+<p>Essentially, stationarity says that at no point does the structure evolve as the study continues; that is, we cannot include a parameter such as <span class="math inline">\(\rho^{(\text{time})}\)</span>.</p>
+<p>Choosing an appropriate structure is often guided by discipline expertise regarding how the sources of variability combine and impact the relationship between the responses. When multiple sources of variability have competing structures, we generally adopt the structure of the “dominant” source. However, it turns out that the choice of the structure need not have a large impact on the analysis — simply indicating in the analysis that there is a potential for correlation can be sufficient. This is the idea behind the approach we describe.</p>
+</section>
+<section id="the-key-to-success-of-generalized-estimating-equations" class="level2" data-number="15.2">
+<h2 data-number="15.2" class="anchored" data-anchor-id="the-key-to-success-of-generalized-estimating-equations"><span class="header-section-number">15.2</span> The Key to Success of Generalized Estimating Equations</h2>
+<p>In the previous section, we considered models for the correlation structure that result from the combination of the various sources of variability in the data generating process. This structure will be used within the generalized estimating equation (GEE) approach.</p>
+<div id="def-gee" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 15.6 (Generalized Estimating Equations (GEE)) </strong></span>Generalized estimating equations can be used to estimate the parameters of a model while accounting for the correlation among observations. In addition to specifying a model for the overall average response, a “working” structure is specified for the correlation of observations from the same subject. The working structure is updated during the estimation process and used to adjust the standard errors of the parameter estimates in the mean model.</p>
+</div>
+<p>Recall that our inference on the parameters requires us to compute the variance-covariance matrix of the corresponding parameter estimates. When a model is estimated using generalized estimating equations, the model we specify for the correlation structure is known as the “working” correlation matrix; this is then updated using the observed data when computing the variance-covariance matrix. As a result, the variance-covariance matrix we use is not based solely on the specified model but is a blend of the model specified and the observed data; this is known as the robust sandwich estimator.</p>
+<div id="def-robust-sandwich-estimator" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 15.7 (Robust Sandwich Estimator) </strong></span>The robust sandwich estimator of the variance-covariance matrix of the parameter estimates from the mean model balances the relationship between the parameter estimates specified by the model (and the “working” correlation matrix) with the relationship suggested by the observed data. Specifically, it has the form</p>
+<p><span class="math display">\[\widehat{\boldsymbol{\Sigma}} = \widehat{\mathbf{U}} \widehat{\mathbf{U}}^{-1/2} \mathbf{R} \widehat{\mathbf{U}}^{-1/2} \widehat{\mathbf{U}}\]</span></p>
+<p>where <span class="math inline">\(\mathbf{U}\)</span> represents the model-based variance-covariance matrix if the structure specified by the working correlation matrix were completely correct, and <span class="math inline">\(\mathbf{R}\)</span> represents the correction factor estimated from the residuals (an empirical estimate).</p>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Big Idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The use of the robust sandwich variance-covariance estimator is what makes the GEE approach unique and so powerful.</p>
+</div>
+</div>
+<p>While the structure of <span class="math inline">\(\mathbf{U}\)</span> is beyond the scope of this text, we can think of it as what the computer does by default when we specify a model under the classical conditions. Essentially, the use of the robust sandwich estimator in the GEE framework means our posited correlation structure need not be correct; it is okay if <span class="math inline">\(\mathbf{U}\)</span> is wrong. With enough data, the inference will be the same regardless of the structure we choose. What we are really specifying is that there is a potential for correlation among these observations. Of course, the better the specified model for the correlation structure, the less adjustment that is needed and the more powerful the results.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It is the use of the robust-sandwich estimator that makes specifying the “independent” correlation structure different than assuming the classical regression model. In classical regression, inference is based on assuming independence. In a GEE framework, the correlation structure will be updated after we assume independence.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>While we are discussing the use of the robust-sandwich estimator as a way of adjusting for the correlation present, we note that this will also adjust for violations in constant variance as a result.</p>
+</div>
+</div>
+<p>Consider the study to investigate the impact of four methods of delivering a pancreatic enzyme supplement (<a href="04b-rm-terminology.html#exm-rm-enzyme-expanded">Example&nbsp;<span>13.2</span></a>). In the GEE approach, we focus on specifying a model for the overall mean response; that is, our modeling is very similar to what we would do if we ignored the correlation altogether:</p>
+<p><span id="eq-rm-mixed-gee"><span class="math display">\[(\text{Fecal Fat})_{i,j} = \beta_0 + \beta_1 (\text{Tablet})_{i,j} + \beta_2 (\text{Coated})_{i,j} + \beta_3 (\text{Uncoated})_{i,j} + \varepsilon_{i,j}. \tag{15.2}\]</span></span></p>
+<p>Notice that our model does acknowledge that multiple observations were collected on each subject (we used both an <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> index). The difference between the GEE approach and the classical approach is that we now specify a correlation structure for the errors. As described in <a href="04b-rm-terminology.html#exm-rm-enzyme-expanded">Example&nbsp;<span>13.2</span></a>, there are four observations within each participant. Since we believe that diet is the primary reason for differences in fecal fat across individuals, the primary source of variability is the participant. This leads us to posit the following compound symmetric working correlation structure:</p>
+<p><span class="math display">\[\Gamma = \begin{pmatrix} 1 &amp; \rho &amp; \rho &amp; \rho \\
+\cdot &amp; 1 &amp; \rho &amp; \rho \\
+\cdot &amp; \cdot &amp; 1 &amp; \rho \\
+\cdot &amp; \cdot &amp; \cdot &amp; 1 \end{pmatrix}.\]</span></p>
+<p>We would then be sure to use the robust-sandwich estimator when computing the standard errors of the parameter estimates in <a href="#eq-rm-mixed-gee">Equation&nbsp;<span>15.2</span></a>.</p>
+<p>When we fit a model using generalized estimating equations, we are fitting a semiparametric model — specifying the model for the mean response and the correlation structure. Inference on parameters is then carried out using large-sample theory. Recall that we concluded there was no evidence (p = 0.168) the average fecal fat was associated with the type of supplement when we ignored the correlation in the data. However, if we account for the correlation estimating the parameters using generalized estimating equations with a compound-symmetric working correlation matrix, we have strong evidence (p = 0.003) the average fecal fat differs for at least one of the supplement types. Correctly accounting for the correlation structure resulted in a more powerful analysis.</p>
+</section>
+<section id="comparison-of-gee-and-mixed-effects-approaches" class="level2" data-number="15.3">
+<h2 data-number="15.3" class="anchored" data-anchor-id="comparison-of-gee-and-mixed-effects-approaches"><span class="header-section-number">15.3</span> Comparison of GEE and Mixed Effects Approaches</h2>
+<p>While both mixed effects models and estimation via generalized estimating equations account for the correlation structure, the two approaches differ in many ways. The mixed effects modeling approach is fully parametric, while estimating via GEE is semiparametric.</p>
+<p>More broadly, these represent two different approaches to repeated measures data: subject-specific and population-averaged.</p>
+<div id="def-subject-specific" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 15.8 (Subject Specific Models) </strong></span>Also known as conditional modeling, the subject-specific approach models at the subject-level and addresses the correlation indirectly through the inclusion of random effects.</p>
+</div>
+<div id="def-population-averaged" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 15.9 (Population Averaged Models) </strong></span>Also known as marginal modeling, the population-averaged approach posits a model for the mean response directly and addresses the correlation through directly modeling its structure.</p>
+</div>
+<p>If you have more intuition about how the response should be characterized at the individual level, then the subject-specific (mixed-effects) approach will be more tractable. If you have more intuition about how the response should be characterized on average across individuals, then the population-averaged (estimated with GEE’s) approach will be more tractable. The GEE approach is fairly robust to misspecifications of the working correlation structure and constant variance conditions. The mixed-effects model approach allows us to quantify the variability in an effect across subjects in the population.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./04c-rm-mixed-models.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mixed Effects Models</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

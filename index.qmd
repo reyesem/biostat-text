@@ -1,0 +1,7 @@
+# Preface {.unnumbered}
+
+The biological sciences often yield data which present unique challenges to analysis. This text introduces these challenges and the statistical methods employed to overcome them. We begin with an introduction to the use of statistical regression models and then explore how such models can be altered to account for various features in the data. This could include non-linear or categorical response variables, censored survival (or reliability) data, or repeated measurements on the same subject. We touch on additional topics, such as study design and power, drawing causal conclusions from observational data, missing data, and general modeling techniques throughout.
+
+This text is applied, focusing primarily on knowing when various modeling strategies are appropriate and how to interpret their results.  This course surveys many different analysis strategies under a statistical modeling framework; we leave a thorough treatment of each topic to other authors.  Our primary aim is to enable readers to evaluate the strength of evidence presented in the literature within their own field of study.  
+
+As with any text in statistics, we seek to develop your statistical literacy and statistical reasoning. 
