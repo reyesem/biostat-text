@@ -64,5 +64,41 @@
   },
   "04d-rm-gee.qmd": {
     "04d-rm-gee.html": "c589cf1b"
+  },
+  "05a-nlm.qmd": {
+    "05a-nlm.html": "74106ed8"
+  },
+  "05b-nlm-model-framework.qmd": {
+    "05b-nlm-model-framework.html": "845578e9"
+  },
+  "05c-nlm-heteroskedasticity.qmd": {
+    "05c-nlm-heteroskedasticity.html": "ef2cd673"
+  },
+  "05d-nlm-logistic.qmd": {
+    "05d-nlm-logistic.html": "9f44e71f"
+  },
+  "05e-nlm-selection.qmd": {
+    "05e-nlm-selection.html": "b9428689"
+  },
+  "05f-nlm-estimation.qmd": {
+    "05f-nlm-estimation.html": "6edc376e"
+  },
+  "05g-nlm-rm.qmd": {
+    "05g-nlm-rm.html": "849def04"
+  },
+  "06a-surv.qmd": {
+    "06a-surv.html": "e1905434"
+  },
+  "06b-surv-terminology.qmd": {
+    "06b-surv-terminology.html": "86ec3361"
+  },
+  "06c-surv-censoring.qmd": {
+    "06c-surv-censoring.html": "3d8eb557"
+  },
+  "06d-surv-basic.qmd": {
+    "06d-surv-basic.html": "7502d5e1"
+  },
+  "06e-surv-cph.qmd": {
+    "06e-surv-cph.html": "5d78d915"
   }
 }

@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Statistical Modeling for the Biological Sciences - 16&nbsp; Nonlinear Model Framework</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./05c-nlm-heteroskedasticity.html" rel="next">
+<link href="./05a-nlm.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="mystyles.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05a-nlm.html">Unit V: Nonlinear Models</a></li><li class="breadcrumb-item"><a href="./05b-nlm-model-framework.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Nonlinear Model Framework</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Biostatistics</a> 
+        <div class="sidebar-tools-main">
+    <a href="./ma482-text.pdf" rel="" title="Download PDF" class="quarto-navigation-tool px-1" aria-label="Download PDF"><i class="bi bi-file-pdf"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./01a-review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit I: Review of Statistics and Probability</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01b-statistical-process.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Overview of the Statistical Process</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01c-distributional-quartet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Distributional Quartet</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01d-essential-probability.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Essential Probability</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./02a-glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit II: General Linear Model</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02b-glm-model-framework.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">General Linear Model Framework</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02c-glm-assessing-conditions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Assessing the Conditions for the General Linear Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02d-glm-unifying-framework.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">The General Linear Model as a Unifying Framework</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./03a-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit III: General Modeling Techniques</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03b-modeling-related-predictors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Addressing Relationships Between Predictors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03c-modeling-categorical-predictors.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Incorporating Categorical Predictors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03d-modeling-interactions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Allowing Effect Modification (Interaction Terms)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03e-modeling-linear-hypotheses.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">General Linear Hypothesis Test</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03f-modeling-large-sample-theory.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Large Sample Theory</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03g-modeling-splines.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Modeling Curvature (Splines)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./04a-rm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit IV: Models for Repeated Measures</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04b-rm-terminology.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">The Language of Repeated Measures</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04c-rm-mixed-models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mixed Effects Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04d-rm-gee.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Generalized Estimating Equations</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./05a-nlm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit V: Nonlinear Models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05b-nlm-model-framework.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Nonlinear Model Framework</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05c-nlm-heteroskedasticity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Relaxing the Constant Variance Condition</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05d-nlm-logistic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Logistic Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05e-nlm-selection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Model Selection</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05f-nlm-estimation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Estimation Details for Nonlinear Models</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05g-nlm-rm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Nonlinear Models with Repeated Measures</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./06a-surv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unit VI: Survival Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06b-surv-terminology.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">The Language of Survival Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06c-surv-censoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Censoring</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06d-surv-basic.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Basic Estimation and Inference</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06e-surv-cph.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Proportional Hazards Model</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./app-glossary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Glossary</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#nonlinear-regression-model" id="toc-nonlinear-regression-model" class="nav-link active" data-scroll-target="#nonlinear-regression-model"><span class="header-section-number">16.1</span> Nonlinear Regression Model</a></li>
+  <li><a href="#estimation" id="toc-estimation" class="nav-link" data-scroll-target="#estimation"><span class="header-section-number">16.2</span> Estimation</a></li>
+  <li><a href="#inference-on-the-parameters" id="toc-inference-on-the-parameters" class="nav-link" data-scroll-target="#inference-on-the-parameters"><span class="header-section-number">16.3</span> Inference on the Parameters</a></li>
+  <li><a href="#allowing-relationships-to-vary-across-groups" id="toc-allowing-relationships-to-vary-across-groups" class="nav-link" data-scroll-target="#allowing-relationships-to-vary-across-groups"><span class="header-section-number">16.4</span> Allowing Relationships to Vary Across Groups</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span id="sec-nlm-model-framework" class="quarto-section-identifier"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Nonlinear Model Framework</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>There are several disciplines that routinely use nonlinear models; one such discipline is pharmacokinetics (the study of how medications are processed by the body).</p>
+<div id="exm-nlm-theoph" class="theorem example">
+<p><span class="theorem-title"><strong>Example 16.1 (Pharmacokinetics of Theophylline) </strong></span>An early-phase clinical study was conducted to assess how Theophylline (an anti-asthmatic agent) is absorbed and eliminated from the human body. A single subject was given an oral dose of 4 mg of the drug, and 11 blood samples were taken over the course of a 24-hour period to determine the concentration of the drug in the body. A graphical summary of the resulting data is presented in <a href="#fig-nlm-theoph-plot">Figure&nbsp;<span>16.1</span></a>.</p>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-nlm-theoph-plot" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="./images/fig-nlm-theoph-plot-1.png" class="img-fluid figure-img" style="width:80.0%" alt="Scatterplot with two best-fit lines overlaid, illustrating clear curvature in the response over time."></p>
+<figcaption class="figure-caption">Figure&nbsp;16.1: Concentration of Theophylline in the blood stream of a patient over a 24-hour period.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Given the topics discussed thus far in the text, it would be reasonable to consider using a flexible spline to model the curvature in the response over time. Based on <a href="#fig-nlm-theoph-plot">Figure&nbsp;<span>16.1</span></a>, qualitatively, using a spline appears to perform rather well. While this approach fits the data well and would allow us to construct good predictions, using a spline does not allow us to easily address the research objective: quantify how quickly the drug is absorbed by and eliminated from the body. That is, this initial modeling approach does not lend itself to expressing the question of interest as a statement about the parameters in the model. It also separates the data analysis from the scientific modeling that suggests the concentration of Theophylline in the body at any point <span class="math inline">\(t\)</span> in time is given by</p>
+<p><span id="eq-nlm-theoph-science"><span class="math display">\[C(t) = \frac{k_a D}{\left(\beta/k_e\right)\left(k_a - k_e\right)} \left(e^{-k_e t} - e^{-k_a t}\right), \tag{16.1}\]</span></span></p>
+<p>where <span class="math inline">\(k_a\)</span> (the absorption rate), <span class="math inline">\(k_e\)</span> (the elimination rate), and <span class="math inline">\(\beta\)</span> (the clearance) are the unknown parameters characterizing the pharmacokinetics of Theophylline, and <span class="math inline">\(D\)</span> is the known dosage given.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Big Idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Nonlinear models are often the result of embedding a scientific model in a statistical framework.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Scientific Model for Theophylline
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We illustrate how the scientific model for the pharmicokinetics of Theophylline suggests a nonlinear model. Readers not familiar with differential equations can skip this without loss of continuity.</p>
+<p>Researchers believe that the absorption and elimination of Theophylline can be modeled using a one-compartment open model with first order absorption, represented by <a href="#fig-nlm-theoph-model">Figure&nbsp;<span>16.2</span></a>. The box represents the “blood compartment” (blood stream). The drug is absorbed into the blood stream through the gut; it is then metabolized by the liver and excreted by the kidneys.</p>
+<div id="fig-nlm-theoph-model" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="./images/Theophylline-Model.jpg" class="img-fluid figure-img" alt="Diagram with a single box containing one input and one output."></p>
+<figcaption class="figure-caption">Figure&nbsp;16.2: Scientific model for pharmicokinetics of Theophylline.</figcaption>
+</figure>
+</div>
+<p>Mathematical modeling allows us to characterize the concentration of Theophylline in the blood over time as a function of the elimination rate, the absorption rate, and the clearance rate (measures volume of blood cleared of the drug per unit time). Let <span class="math inline">\(D\)</span> represent the oral dose given at time <span class="math inline">\(t = 0\)</span>; as the subject has not been given the treatment prior, it is reasonable to assume that the amount of drug in the blood is initially 0 mg; that is, <span class="math inline">\(A(0) = 0\)</span>. Further, researchers believe the body can absorb the entire dose <span class="math inline">\(D\)</span>; therefore, the amount of drug at the absorption site <span class="math inline">\(A_a(t)\)</span> is initially 4 mg; that is, <span class="math inline">\(A_a(0) = D = 4\)</span>. Letting <span class="math inline">\(k_a\)</span> and <span class="math inline">\(k_e\)</span> represent the absorption and elimination rates, respectively, we have the following mathematical model corresponding to the above scientific model:</p>
+<p><span class="math display">\[
+\begin{aligned}
+  \frac{d}{dt} A(t) &amp;= k_a A_a(t) - k_e A(t) \\
+  \frac{d}{dt} A_a(t) &amp;= -k_a A_a(t).
+\end{aligned}
+\]</span></p>
+<p>Scientists believe that the amount of drug in the blood stream at any time is proportional to the concentration of the drug at that time <span class="math inline">\(C(t)\)</span>. That is, <span class="math inline">\(A(t) = V C(t)\)</span>, where <span class="math inline">\(V\)</span> represents the volume of the blood compartment. The above system of differential equations can be solved using Laplace transforms. Letting <span class="math inline">\(V = \beta/k_e\)</span> where <span class="math inline">\(\beta\)</span> is the clearance rate, we are led to the following solution:</p>
+<p><span class="math display">\[C(t) = \frac{k_a D}{\left(\beta/k_e\right)\left(k_a - k_e\right)} \left(e^{-k_e t} - e^{-k_a t}\right).\]</span></p>
+</div>
+</div>
+<p>What we want to emphasize is that the form of the model for the concentration of Theophylline in the body was not developed empirically using statistical modeling techniques; instead, it was derived through mathematical modeling of the drug itself from scientific principles. The parameters of the model <span class="math inline">\(k_a\)</span>, <span class="math inline">\(k_e\)</span>, and <span class="math inline">\(\beta\)</span> are unknown, but they govern the process. More, these parameters are directly related to the scientific question of interest. We can now embed this scientific model into a statistical framework (accounting for sources of variability) in order to make inference on the parameters.</p>
+<p>Notice that there is no way of rewriting the model in <a href="#eq-nlm-theoph-science">Equation&nbsp;<span>16.1</span></a> as a linear combination of the parameters <span class="math inline">\(k_a\)</span>, <span class="math inline">\(k_e\)</span>, and <span class="math inline">\(\beta\)</span>; that is, there is no vector <span class="math inline">\(\mathbf{x}\)</span> such that</p>
+<p><span class="math display">\[C(t) = \mathbf{x}^\top \begin{pmatrix} k_a \\ k_e \\ \beta \end{pmatrix}.\]</span></p>
+<p>Therefore, our model for the concentration of Theophylline is a nonlinear model.</p>
+<div id="def-nlm" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 16.1 (Nonlinear Model) </strong></span>A model is said to be nonlinear if it cannot be written as a linear combination of the parameters.</p>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When your model has more parameters than predictors, you likely have a model that is nonlinear in the parameters.</p>
+</div>
+</div>
+<section id="nonlinear-regression-model" class="level2" data-number="16.1">
+<h2 data-number="16.1" class="anchored" data-anchor-id="nonlinear-regression-model"><span class="header-section-number">16.1</span> Nonlinear Regression Model</h2>
+<p>Generalizing our approach with the general linear model, we consider a semiparametric modeling perspective for most nonlinear models. Under this approach, we specify the model for the mean response and the variability of the response (given the predictors). We then use the method of least squares to obtain our estimates of the parameters, and we rely on large sample theory to characterize the sampling distribution of these parameter estimates. This framework turns out to be quite flexible.</p>
+<p>Our semiparametric approach, also known as a “moment model,” focuses on specifying the mean and variance of the response given the predictors.</p>
+<div id="def-semiparametric-nonlinear-model" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 16.2 (Semiparametric Nonlinear Model) </strong></span>A semiparametric nonlinear model specifies the <em>mean</em> and <em>variance</em> of the response given the predictors; we write</p>
+<p><span class="math display">\[
+\begin{aligned}
+  E\left[(\text{Response})_i \mid (\text{Predictors})_i\right]
+    &amp;= f\left((\text{Predictors})_i, \boldsymbol{\beta}\right) \\
+  Var\left[(\text{Response})_i \mid (\text{Predictors})_i\right]
+    &amp;= \sigma^2
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(f(\cdot)\)</span> is referred to as the mean response function.</p>
+</div>
+<p>For <a href="#exm-nlm-theoph">Example&nbsp;<span>16.1</span></a>, our nonlinear model would have the form</p>
+<p><span id="eq-nlm-theoph-nlm"><span class="math display">\[
+\begin{aligned}
+  E\left[(\text{Concentration})_i \mid (\text{Time})_i\right]
+    &amp;= \frac{4 k_a}{\left(\beta/k_e\right)\left(k_a - k_e\right)} \left(e^{-k_e (\text{Time})_i} - e^{-k_a (\text{Time})_i}\right) \\
+  Var\left[(\text{Concentration})_i \mid (\text{Time})_i\right] &amp;= \sigma^2.
+\end{aligned}
+\tag{16.2}\]</span></span></p>
+<p>Notice that under this specification there is no “error” term. We only concern ourselves with positing the mean and variance; not only do we not specify the distribution of the “errors,” we do not even make use of them in our conceptualization of the model.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Some authors choose to write nonlinear models as</p>
+<p><span class="math display">\[(\text{Response})_i = f\left((\text{Predictors})_i, \boldsymbol{\beta}\right) + \varepsilon_i,\]</span></p>
+<p>and sometimes go on to assume <span class="math inline">\(\varepsilon_i \stackrel{\text{IID}}{\sim} N\left(0, \sigma^2\right)\)</span>. However, this approach is not as flexible. First, it requires the response to be quantitative. By only specifying the mean and variance of the response, our approach generalizes to accommodate categorical responses (though we focus on quantitative responses for the majority of this unit). Second, there is little to be gained by a fully parametric approach as this does not avoid the requirements for large sample theory as it does in the linear model case. That is, even if we assume the errors follow a Normal distribution, we must rely on large sample theory to model the sampling distribution of the resulting parameter estimates.</p>
+</div>
+</div>
+<p>Finally, we note that in our specification above, we have assumed the variability of the response is constant for all values of the predictor. We will relax this condition in <a href="05c-nlm-heteroskedasticity.html"><span>Chapter&nbsp;17</span></a>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In some cases, the mean response function <span class="math inline">\(f(\cdot)\)</span> lends itself to a transformation that results in a linear model. For example, if <span class="math inline">\(f(x, \boldsymbol{\beta}) = \beta_0 e^{\beta_1 x}\)</span>, then taking the natural logarithm of both sides results in a linear model:</p>
+<p><span class="math display">\[\ln\left(f(x, \boldsymbol{\beta})\right) = \ln\left(\beta_0\right) + \beta_1 x.\]</span></p>
+<p>As a result, in some disciplines, it is standard practice to consider such transformation prior to modeling. There is not widespread agreement in the statistical community on such transformations.</p>
+<p>Applying some function so that the model is linear in the parameters (or at least, some function of the parameters) allows standard software to be used. As scientists are familiar with approaches for fitting linear models, this often makes it easy to put in a context that is understood. However, such transformations may destroy other modeling conditions, such as that of constant variance (or any distributional assumptions, if applicable). Transformations can also result in the model no longer being parameterized by the scientific quantities of interest. As scientific principles often directed the development of the nonlinear model, this is the scale on which scientists have intuition (it may be more difficult to think on the logarithmic-scale, for example), meaning scientists have less intuition on the transformed scale. After transformation, the model may no longer characterize the average response. Finally, there are some models for which such a transformation is not possible. As a result, we argue for using the nonlinear regression framework and studying methods for fitting such models.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is a difference between taking nonlinear transformations of a predictor to fit curvature in a linear model and taking nonlinear transformations of a model (the response often) in order to convert a nonlinear model into a model which is linear with respect to some function of the parameters.</p>
+</div>
+</div>
+</section>
+<section id="estimation" class="level2" data-number="16.2">
+<h2 data-number="16.2" class="anchored" data-anchor-id="estimation"><span class="header-section-number">16.2</span> Estimation</h2>
+<p>The method of least squares for nonlinear models is similar to the process for linear models. We choose the values of the parameters that ensures the predicted mean function is as “close” to the observed responses as possible. While we do not have an error term in the model, we can still consider the residuals when defining how “close” our predicted mean response is to the observed responses. The least squares estimates minimize</p>
+<p><span class="math display">\[\sum\limits_{i=1}^{n} \left[(\text{Response})_i - f\left((\text{Predictors})_i, \boldsymbol{\beta}\right)\right]^2.\]</span></p>
+<p>In the nonlinear model literature, this is often referred to as the <em>ordinary</em> least squares estimator.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If we take <span class="math inline">\(f(\cdot)\)</span> to be a linear function in the parameters,</p>
+<p><span class="math display">\[f\left((\text{Predictors})_i, \boldsymbol{\beta}\right) = \sum_{j=1}^{p} (\text{Predictor } j)_i \beta_j,\]</span></p>
+<p>the linear model framework is a special case of the nonlinear regression model.</p>
+</div>
+</div>
+<p>The least squares estimates are computed numerically (for details, see <a href="05f-nlm-estimation.html"><span>Chapter&nbsp;20</span></a>).</p>
+<p>Given parameter estimates, we can then estimate the residual variance:</p>
+<p><span class="math display">\[\widehat{\sigma}^2 = \frac{1}{n-p} \sum\limits_{i=1}^{n} \left[(\text{Response})_i - f\left((\text{Predictors})_i, \widehat{\boldsymbol{\beta}}\right)\right]^2\]</span></p>
+<p>where <span class="math inline">\(p\)</span> represents the number of <em>parameters</em> in the model, which need not correspond to the number of predictors in the model.</p>
+<p>As with previous models discussed in the text, the process of estimating the parameters is a mathematical problem. It is the process of making inference where we move into the realm of statistics.</p>
+</section>
+<section id="inference-on-the-parameters" class="level2" data-number="16.3">
+<h2 data-number="16.3" class="anchored" data-anchor-id="inference-on-the-parameters"><span class="header-section-number">16.3</span> Inference on the Parameters</h2>
+<p>In order to make inference about the parameters, we need a model for the sampling distribution of the parameter estimates. Unlike with the general linear model, we cannot rely on probability theory to obtain exact models for the sampling distributions. Therefore, we rely on large sample theory and empirical models (<a href="03f-modeling-large-sample-theory.html"><span>Chapter&nbsp;11</span></a>).</p>
+<div id="def-nlm-samp-distns" class="theorem definition">
+<p><span class="theorem-title"><strong>Definition 16.3 (Large Sample Model for the Sampling Distribution of the Least Squares Estimates in Nonlinear Models) </strong></span>Consider a nonlinear model as described in <a href="#def-semiparametric-nonlinear-model">Definition&nbsp;<span>16.2</span></a>. Assuming the form of the model is correctly specified, as the sample size gets large, we have that</p>
+<p><span class="math display">\[\frac{\widehat{\beta}_j - \beta_j}{\sqrt{Var\left(\widehat{\beta}_j\right)}} \sim N(0, 1)\]</span></p>
+<p>for all <span class="math inline">\(j = 1, \dotsc, p\)</span>. Further, under the null hypothesis</p>
+<p><span class="math display">\[H_0: \mathbf{K}\boldsymbol{\beta} = \mathbf{m}\]</span></p>
+<p>we have that</p>
+<p><span class="math display">\[\left(\mathbf{K}\widehat{\boldsymbol{\beta}} - \mathbf{m}\right)^\top \left(\mathbf{K}\widehat{\boldsymbol{\Sigma}}\mathbf{K}^\top\right)^{-1} \left(\mathbf{K}\widehat{\boldsymbol{\beta}} - \mathbf{m}\right) \sim \chi^2_r\]</span></p>
+<p>where <span class="math inline">\(r\)</span> is the rank (number of rows) of <span class="math inline">\(\mathbf{K}\)</span> and <span class="math inline">\(\widehat{\boldsymbol{\Sigma}}\)</span> is the estimated variance-covariance matrix of the parameter estimates.</p>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Large sample theory is often relied on regardless of the sample size. It is often the case that there is so little error in the responses that the sampling distributions of the estimates comes close to these asymptotic approximations even in small samples.</p>
+<p>Making additional distributional assumptions does not avoid the need for large sample theory.</p>
+</div>
+</div>
+<p>The above results allow us to not only construct confidence intervals, but we can also make use of the general linear hypothesis testing framework (<a href="03e-modeling-linear-hypotheses.html"><span>Chapter&nbsp;10</span></a>) for testing specific hypotheses. That is, our inference is not all that different than under the general linear model framework once we have estimates for the parameters and estimates for their standard errors.</p>
+</section>
+<section id="allowing-relationships-to-vary-across-groups" class="level2" data-number="16.4">
+<h2 data-number="16.4" class="anchored" data-anchor-id="allowing-relationships-to-vary-across-groups"><span class="header-section-number">16.4</span> Allowing Relationships to Vary Across Groups</h2>
+<p>Modeling involves positing a relationship between the response and the predictors. Suppose we believe the form of the model is similar for all subjects in a population, but the specific parameters may differ across sub-populations. By including interaction terms, we can allow the relationship to vary across sub-populations.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Big Idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Interaction terms allow a parameter to depend on the value of another variable.</p>
+</div>
+</div>
+<p>The idea of allowing a relationship to depend upon a predictor is something we have studied in each of the previous units. The same ideas apply in nonlinear models; the difference is that computationally, it requires more to specify the model appropriately in the computer.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+General Approach for Including Interactions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In order to allow parameters in a model vary across sub-populations, consider the following:</p>
+<ul>
+<li>Refine your question in terms of which parameter(s) will be allowed to vary, and which parameter(s) will remain fixed for all groups.</li>
+<li>Use an indicator variable to capture the grouping structure.</li>
+<li>Embed your research question into the general linear hypothesis framework.</li>
+</ul>
+<p>Additionally, when fitting the model using software, starting estimates are typically needed (see <a href="05f-nlm-estimation.html"><span>Chapter&nbsp;20</span></a>); these can be obtained by fitting separate models to subsets of the data; that is, you can fit the model in each subpopulation and use the resulting estimates as starting estimates for the actual model of interest.</p>
+<p>These considerations are quite general and can be widely applied.</p>
+</div>
+</div>
+<div id="exm-nlm-bacteria" class="theorem example">
+<p><span class="theorem-title"><strong>Example 16.2 (Bacteria Growth) </strong></span>Suppose we believe a particular bacteria grows exponentially. That is, we believe that, on average, the response is given by</p>
+<p><span class="math display">\[E\left[(\text{Response})_i \mid (\text{Time})_i\right] = \alpha_0 + e^{\alpha_1 (\text{Time})_i}\]</span></p>
+<p>at each observed time.</p>
+<p>Researchers are considering two different media for culturing the bacteria. Before proceeding to production, they would like to determine if there is evidence that the growth trajectory of the bacteria differs between the two media.</p>
+<p>While wells containing the bacteria are seeded at the same amount regardless of the media (same amount of bacteria to begin with), we believe the media might result in different growth rates. As a result, we expect the value of <span class="math inline">\(\alpha_0\)</span> to be the same for both media, but the value of <span class="math inline">\(\alpha_1\)</span> could differ for the each of the two media.</p>
+</div>
+<p>To develop a model consistent with the researchers’ beliefs in <a href="#exm-nlm-bacteria">Example&nbsp;<span>16.2</span></a>, we consider an interaction term. Specifically, define an indicator variable</p>
+<p><span class="math display">\[(\text{Media B})_i = \begin{cases} 1 &amp; \text{if i-th observation corresponds to bacteria grown in media B} \\ 0 &amp; \text{if i-th observation corresponds to bacteria grown in media A.} \end{cases}\]</span></p>
+<p>Now, consider the following nonlinear model:</p>
+<p><span class="math display">\[
+\begin{aligned}
+  E\left[(\text{Response})_i \mid (\text{Time})_i, (\text{Media})_i\right]
+    &amp;= \beta_0 e^{\left(\beta_1 + \beta_{2} (\text{Media B})_i\right) (\text{Time})_i} = \beta_0 e^{\beta_1 (\text{Time})_i + \beta_{2} (\text{Media B})_i (\text{Time})_i} \\
+  Var\left[(\text{Resposne})_i \mid (\text{Time})_i, (\text{Media})_i\right]
+    &amp;= \sigma^2.
+\end{aligned}
+\]</span></p>
+<p>This model has an interaction between the indicator variable for Media B and the time; however, there is no “main effect” of the media; that is, there is no term that has <span class="math inline">\(\beta_3 (\text{Media B})_i\)</span>. This single model implies expected responses for each media:</p>
+<p><span class="math display">\[
+\begin{aligned}
+  \text{Media A}&amp;: E\left[(\text{Response})_i \mid (\text{Time})_i\right] = \beta_0 + e^{\beta_1 (\text{Time})_i} \\
+  \text{Media B}&amp;: E\left[(\text{Response})_i \mid (\text{Time})_i\right] = \beta_0 + e^{\left(\beta_1 + \beta_2\right)(\text{Time})_i}.
+\end{aligned}
+\]</span></p>
+<p>Notice this model maintains the assumptions we had about the process:</p>
+<ul>
+<li>The initial state is the same under both media <span class="math inline">\(\left(\beta_0\right)\)</span>.</li>
+<li>The growth rate is allowed to differ under the two media <span class="math inline">\(\left(\beta_1 \text{ vs. } \beta_1 + \beta_2\right)\)</span>.</li>
+</ul>
+<p>As discussed when we introduced interaction terms in linear models, the benefits of using interaction terms instead of doing a subgroup analysis is that we can easily control which parameters are allowed to differ, we make use of the constant variance condition gaining power, and our question of interest is embedded in the model. To illustrate this last point, notice that the hypotheses</p>
+<p><span class="math display">\[H_0: \gamma_2 = 0 \qquad \text{vs.} \qquad H_1: \gamma_2 \neq 0\]</span></p>
+<p>test whether the growth rate actually differs between the two media.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./05a-nlm.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Unit V: Nonlinear Models</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./05c-nlm-heteroskedasticity.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Relaxing the Constant Variance Condition</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

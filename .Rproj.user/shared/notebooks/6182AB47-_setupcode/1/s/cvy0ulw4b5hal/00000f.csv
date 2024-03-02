@@ -1,0 +1,5 @@
+"0","#| label: data-theoph"
+"0","#| include: false"
+"0",""
+"0","theoph <- read_csv(""data/Theoph.csv"","
+"0","                   col_types = c(""dd""))"

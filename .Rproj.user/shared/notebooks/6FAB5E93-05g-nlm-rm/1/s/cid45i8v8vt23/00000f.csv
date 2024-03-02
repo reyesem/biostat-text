@@ -1,0 +1,4 @@
+"0","fit2.results <- tidy(fit2.theop, effects = 'ran_pars')
+"
+"2","Error: object 'fit2.theop' not found
+"

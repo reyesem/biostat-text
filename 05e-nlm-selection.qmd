@@ -1,0 +1,65 @@
+# Model Selection {#sec-nlm-selection}
+
+{{< include _setupcode.qmd >}}
+
+As we discussed in @sec-modeling-linear-hypotheses, hypothesis testing is really a formal way of comparing two models --- a simplified model and a more complex model.  However, this form of model comparison requires the simple model to be a special case of the more complex model resulting from constraining the parameters in some way.  This is often referred to as "nested testing."  In some applications, we may be interested in comparing two competing (yet equally complex) models.  In such cases, the general linear hypothesis testing framework does not work; as an alternative, we consider likelihood based model selection criteria.
+
+There are several ways to quantify how well a model fits a set of data, or more accurately, how closely the data fits a particular model.  The most well-known is R-squared.
+
+:::{#def-r-squared}
+## R-squared
+The proportion of the variability in the response explained by the model. When the response is quantitative, R-squared is defined as
+
+$$R^2 = \frac{SSR}{SST} = 1 - \frac{SSE}{SST} = 1 - \frac{\sum_{i=1}^{n} (\text{Residuals})_i^2}{\sum_{i=1}^{n} \left((\text{Response})_i - (\text{Overall Average Response})\right)^2}.$$
+
+When the response is categorical (such as logistic regression), there is no unique definition of R-squared.
+:::
+
+R-squared has a nice interpretation and is often used to quantify the quality of the model fit.  However, it is not a great criteria for comparing models.  It can be proven that R-squared will continue to increase as the model becomes more complex.  In fact, in many situations it is possible to add enough terms that you will obtain an R-squared value of 1 indicating perfect fit (visually, think about connecting the dots).  However, this is the result of overfitting.
+
+:::{#def-overfitting}
+## Overfitting
+Overfitting refers to constructing a model that accurately predicts the observed data at the expense of accurate variance estimation and model parsimony.  As a result, the model will have poor prediction for future observations.
+:::
+
+Remember, models are never correct; by nature, they are a simplification of a complex process.  We do, however, want our models to be useful.  Creating a model that predicts well in the sample but performs poorly outside the sample is not helpful, and it could lead to incorrectly characterizing the scientific behavior being observed.  As a result, we want a different metric for assessing model performance when comparing models.
+
+:::{.callout-note}
+There are a couple "adjusted R-squared" metrics which do take into account model complexity.  We do not discuss them in this text as they tend to be reserved for linear models and it is not obvious how to generalize them to other model settings.
+:::
+
+As introduced in @sec-nlm-logistic, when we define a fully parametric model, we can use likelihood theory to fit the model.  In particular, the maximum likelihood estimates are the values of the parameters that maximize the likelihood function (@def-likelihood-function).  Larger values of the likelihood (under an estimated model) indicate stronger agreement with the data.  That is, larger values of the likelihood indicate a better fit.  This suggests a general metric for assessing models regardless of their complexity; such metrics are known as information criteria.
+
+:::{#def-information-criteria}
+## Information Criteria
+Information criteria refer to metrics that balance the model fit (through the likelihood function) with the model complexity through some penalty term.
+:::
+
+Information criteria do not have an intuitive scale like R-squared; therefore, the values returned from these metrics have no natural interpretation.  However, they do allow for comparisons between arbitrary models.
+
+:::{.callout-warning}
+Information criteria rely on the likelihood; as a result, they only truly make sense when we are willing to assume the parametric model is appropriate.  The computer can always compute them, but we should understand that they assume some distributional model for the response.
+:::
+
+While there have been several information criteria proposed (and more continue to be developed), there are two that are very well known and are often defaults in software: AIC and BIC.
+
+:::{#def-aic}
+## AIC
+Given a model $\mathcal{M}$, Akaike's information criterion (AIC) is defined as
+
+$$\text{AIC}_{\mathcal{M}} = -2\ln\left(\widehat{L}_{\mathcal{M}}\right) + 2p_{\mathcal{M}}$$
+
+where $\widehat{L}_{\mathcal{M}}$ represents the likelihood function corresponding to model $\mathcal{M}$ when evaluated at the maximum likelihood estimates, and $p_{\mathcal{M}}$ is the number of parameters in $\mathcal{M}$.  
+:::
+
+Larger values of the likelihood function indicate better agreement; similarly, we prefer parsimonious models when possible.  Therefore, _lower_ values of AIC are preferred.  AIC favors models that fit the data well (high likelihood) but penalizes for overly complex models (too many parameters).  Of course, this penalty is the same regardless of the sample size.  This inspires BIC.
+
+:::{#def-bic}
+## BIC
+Given a model $\mathcal{M}$, Schwarz's Bayesian information criterion (BIC) is defined as
+
+$$\text{BIC}_{\mathcal{M}} = -2\ln\left(\widehat{L}_{\mathcal{M}}\right) + p_{\mathcal{M}} \ln(n).$$
+:::
+
+Note that the formula for BIC is nearly identical to that of AIC.  As with AIC, lower values of BIC are preferred.  With information criteria, as there is no natural scale, it only makes sense to compare models on the same set of data (you cannot compare the AIC from one study to the AIC of a different study).  There is also no p-value for determining if the difference in AIC (or BIC) values for two models is "significant."  Lower is simply better; however, some people do advocate various rules of thumb.  For our purpose, if the values between two models are at all close, it should be a subject-matter decision: which model better explains the scientific process?  Alternatively, if it is close, choose the model that is easier to interpret.
+

@@ -1,0 +1,5 @@
+"0","#| label: data-indometh"
+"0","#| include: false"
+"0",""
+"0","indometh <- read_csv('data/Indometh.csv',"
+"0","                     col_types = c('dd'))"

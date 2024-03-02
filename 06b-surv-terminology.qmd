@@ -1,0 +1,128 @@
+# The Language of Survival Analysis {#sec-surv-terminology}
+
+{{< include _setupcode.qmd >}}
+
+Models for survival analysis, in contrary to other models discussed in this text, are not generally concerned with the average response.  Instead, they rely on different characterizations of the distribution of the response.  While @sec-essential-probability introduced basic methods for characterizing the distribution of a random variable, we need to extend these ideas in order to discuss survival analysis.
+
+Let $T$ represent the time until an event occurs; as we cannot predict this time with certainty, $T$ is a random variable.  Since it is a time, it could take on any value larger than 0; and, its distribution can be characterized through the probability density function $f(t)$ (@def-density-function), which links the values it can assume with the corresponding likelihood they occur.
+
+:::{#exm-surv-rats}
+## Carcinogen Exposure in Rats
+Consider a study in which rats were exposed to a carcinogen and then monitored closely.  Suppose the distribution of the time $T$ (in days) between exposure and the development of a tumor can be modeled with the following probability density function:
+
+$$f(t) = \frac{1}{10} e^{-t/10} \qquad t > 0.$$
+:::
+
+@fig-surv-density plots the density function from @exm-surv-rats.  We see that smaller times are more likely (since they correspond to higher values of the density function) than larger times.  That is, we would expect a tumor to develop relatively quickly in these rats.
+
+```{r}
+#| label: fig-surv-density
+#| fig-cap: Density function from a hypothetical study investigating the time until a tumor develops in rats exposed to a carcinogen.
+#| fig-alt: Line plot showing exponential decay.
+
+tumordata <- tibble(
+  x = seq(0, qexp(0.99, rate = 0.1), length.out = 1000),
+  y = dexp(x, rate = 0.1)
+)
+
+ggplot(tumordata,
+       mapping = aes(y = y, x = x)) +
+  geom_line() +
+  labs(y = NULL,
+       x = 'Time (days) between Exposure and Tumor Development') +
+  theme(axis.ticks.y = element_blank(),
+        axis.text.y = element_blank())
+```
+
+Survival analysis concerns itself primarily with the likelihood of remaining "event-free."  For example, for the Carcinogen example, we might be interested in the proportion of rats that are still tumor free through 7 days; this translates to computing
+
+$$Pr(T > 7) = \int_{7}^{\infty} f(t) dt.$$
+
+Notice that this is the complement of the cumulative distribution function (@def-cdf); this is known as the survival function.
+
+:::{#def-survival}
+## Survival Function
+Let $T$ be a random variable; the survival function $S(u)$ is defined as
+
+$$S(t) = Pr(T > t) = 1 - F(t),$$
+
+capturing the probability of failing _after_ a time, where $F(t)$ is the CDF of $T$.
+
+For a continuous random variable, we have that
+
+$$S(t) = \int_{t}^{\infty} f(u) du$$
+
+implying that $f(t) = -\frac{d}{dt} S(t)$.
+:::
+
+It should be clear from the definition that survival functions range between 0 and 1, must have $S(0) = 1$, and diminish towards 0 as time increases.  In our example, this translates to rats being alive at the start of the study and all rats will develop a tumor at some point after exposure.
+
+In addition to the likelihood of being event-free past some point, we may want to know the likelihood of experiencing the event in the next unit of time _given_ the subject has been event-free up to that point.  For example, what proportion of rats in the Carcinogen example will develop a tumor within the next day _given_ the rats were tumor-free through seven days?  The additional information (following the word "given") changes the computation; we are not interested in $Pr(7 < T \leq 8)$ because the additional information says we are only interested in the subset of rats which are tumor-free through 7 days.  We express this as $Pr(T \leq 8 \mid T > 7)$.  Since we are only interested in a subset of rats, we need to rescale (see @fig-surv-conditional-probability); this results in
+
+$$Pr(T \leq 8 \mid T > 7) = \frac{Pr(7 < T \leq 8)}{Pr(T > 7)} = 1 - \frac{S(8)}{S(7)}.$$
+
+```{r}
+#| label: fig-surv-conditional-probability
+#| fig-cap: Illustration of conditional probability.
+#| fig-alt: Line plot with two areas shaded under the curve - the area between 7 and 8, and the area to the right of 7.
+
+ggplot(data = tumordata,
+       mapping = aes(x = x, y = y)) +
+  geom_area(data = filter(tumordata, x > 7), 
+            fill = "red", alpha = 0.3) +
+  geom_area(data = filter(tumordata, x > 7, x <= 8), 
+            fill = "blue", alpha = 0.5) +
+  geom_line(linewidth = 1.1) +
+  geom_vline(xintercept = 7, linetype = 2, color = "red") +
+  geom_vline(xintercept = 8, linetype = 2, color = "blue") +
+  annotate("label", x = 7, y = 0.0125, label = "t = 7", color = "red") +
+  annotate("label", x = 8, y = 0.025, label = "t = 8", color = "blue") +
+  annotate("label", x = 25, y = 0.0625,
+           label = 'plain(Pr)(T <= 8 ~ "|" ~ T > 7) == frac("purple region", "(purple region) + (red region)")',
+           parse = TRUE) +
+  labs(y = "Density Function",
+       x = "Time Between Carcinogen Exposure and Tumor Development (days)") +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+This captures the event rate in the next time interval among survivors; this is known as the mortality rate.
+
+:::{#def-mortality}
+## Mortality Rate
+For any particular time $t$, the morality rate $m(t)$ is the proportion of the population that experiences the event between times $t$ and $t + 1$, among individuals that are event-free at time $t$.  That is,
+
+$$m(t) = Pr(t \leq T \leq t + 1 \mid T > t) = 1 - \frac{S(t + 1)}{S(t)}.$$
+:::
+
+The mortality rate considers a step of a single unit of time.  Imagine taking a step of size $h$, considering the proportion of deaths _per unit time_ with this step size, and then allowing this step size to become very small (mathematically, taking a limit).  This would describe the instantaneous mortality rate, known as the hazard.
+
+:::{#def-hazard}
+## Hazard Function
+For any time $t$, the hazard function $\lambda(t)$ is the instantaneous mortality rate per unit time:
+  
+$$\lambda(t) = \lim_{h \rightarrow 0} \frac{Pr(t \leq T \leq t + h \mid T > t)}{h} = \frac{f(t)}{S(t)} = -  \frac{\frac{d}{dt} S(t)}{S(t)} = -\frac{d}{dt} \log(S(t)).$$
+:::
+
+:::{.callout-warning}
+While the hazard function is related to probabilities, it is _not_ a probability.  As a result, it can take on values much larger than 1.  
+:::
+
+Larger values of the hazard function indicate a higher likelihood of the event.  Given that each of these quantities (survival, mortality, hazard) is related to the density function, they are not technically necessary.  However, as we will see, it turns out that it is sometimes easier to model on the hazard scale than modeling the density function.  What is important to see is that if we are able to characterize the hazard function, we have also characterized the survival function and therefore the entire distribution.  
+
+The last component of the above definition emphasizes the relationship between the survival function and the hazard function.  Inverting this relationship provides another quantity often referenced in survival analysis.
+
+:::{#def-cumulative-hazard}
+## Cumulative Hazard
+For any time $t$, we have that
+
+$$S(t) = e^{-\int_{0}^{t} \lambda(u) du}$$
+
+where 
+
+$$\Lambda(t) = -\int_{0}^{t} \lambda(u) du$$
+
+is known as the cumulative hazard function.
+:::
+
+There are many named probability models used to characterize the distribution of an event time (Exponential, Gamma, Weibull, etc.).  There are a few commonalities; each is defined over non-negative values as they are modeling the time until an event.  Second, each tends to be right-skewed (the distribution has a "slide" shape with a long tail toward higher values).  This is why it is often more common to report the median survival time instead of the average survival time, as the average may be a misleading estimate of the center of the distribution.  Such parametric models are quite common in engineering disciplines; however, among the biological sciences, it is more common to adopt a semiparametric approach.

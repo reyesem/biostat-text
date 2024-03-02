@@ -1,0 +1,7 @@
+# Unit V: Nonlinear Models {-}
+
+@sec-modeling-splines considered an approach for modeling curvature between the response and predictor(s).  That curvature was captured by functions that were linear in the _parameters_, exploiting the flexibility in the general linear model framework.  But, these models were largely empirical.  That is, while the form of the model was certainly influenced by the research question of interest, any curvature was primarily suggested by the data itself.  When we begin the modeling process with a mathematical representation of the scientific processes (such as those in chemical engineering, ecology, cellular biology, etc.), the resulting model may be nonlinear in the parameters.  
+
+In the previous units of the text, we have assumed the response to be a quantitative variable.  However, when the response is a categorical variable, the most appropriate models are often nonlinear in the parameters.  
+
+In each of these settings, while a general linear model may be constructed that would capture the curvature in the data, a nonlinear model better represents the data generating process.  Further, the scientific questions of interest can often be represented by the parameters of that nonlinear model.  In this unit, we introduce a framework for making inference on the parameters of nonlinear models.

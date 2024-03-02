@@ -44,6 +44,20 @@ book:
         - 04b-rm-terminology.qmd
         - 04c-rm-mixed-models.qmd
         - 04d-rm-gee.qmd
+    - part: 05a-nlm.qmd
+      chapters:
+        - 05b-nlm-model-framework.qmd
+        - 05c-nlm-heteroskedasticity.qmd
+        - 05d-nlm-logistic.qmd
+        - 05e-nlm-selection.qmd
+        - 05f-nlm-estimation.qmd
+        - 05g-nlm-rm.qmd
+    - part: 06a-surv.qmd
+      chapters: 
+        - 06b-surv-terminology.qmd
+        - 06c-surv-censoring.qmd
+        - 06d-surv-basic.qmd
+        - 06e-surv-cph.qmd
     - references.qmd
   appendices: 
     - app-glossary.qmd

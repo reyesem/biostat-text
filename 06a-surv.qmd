@@ -1,0 +1,3 @@
+# Unit VI: Survival Analysis {-}
+
+Survival analysis (often referred to as "reliability analysis" in engineering) refers to the statistical analysis of studies for which the response is the time until an event occurs, such as the time until a device fails or the time until a subject dies.  Studies involving such an endpoint often involve censoring --- the event of interest is not observed for every subject during the study period.  In such situations, we must develop special models in order to obtain proper inference.  In this unit, we discuss the challenges associated with censoring and how we address these challenges when performing inference and when developing models.
